@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 interface Link {
   path: string;
-  title?: string;
-  routeParam?: string;
+  title: string;
 }
 
 @Component({
@@ -16,7 +15,5 @@ export class NavbarComponent {
   links: Link[] = [
     { path: '', title: 'home' },
     { path: '/shop', title: 'shop' },
-    { path: '/product', routeParam: '' },
-    { path: '/checkout' },
   ];
 }

@@ -1,1 +1,36 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Tokyo Regular";
+  src: url("../public/fonts/tokyo_regular/tokyoregular-3lmq6.ttf")
+      format("truetype"),
+    url("../public/fonts/tokyo_regular/tokyoregular-3lmq6-webfont.woff")
+      format("woff"),
+    url("../public/fonts/tokyo_regular/tokyoregular-3lmq6-webfont.woff2")
+      format("woff2");
+  font-weight: 400, 500, 600, 700;
+}
+
+@font-face {
+  font-family: "Tokyo 2097";
+  src: url("../public/fonts/tokyo_2097/Tokyo2097-7RYP.ttf") format("truetype");
+}
+
+@theme {
+  --color-ms-muted: #bbb8bb;
+  --color-ms-dark: #343434;
+  --color-ms-darker: #28282b;
+  --color-ms-orange: #ff7f50;
+}
+* {
+  font-family: "Tokyo Regular", "sans-serif";
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Tokyo 2097", "sans-serif";
+  font-weight: 600;
+  font-style: normal;
+}

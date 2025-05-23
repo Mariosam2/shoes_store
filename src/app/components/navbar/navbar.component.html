@@ -1,7 +1,7 @@
-<nav class="nav-container">
-  <ul class="nav-links">
+<nav class="nav-container absolute top-0 left-0 w-full">
+  <ul class="nav-links bg-ms-muted flex gap-x-2 w-fit ms-auto mt-4 me-12">
     @for (link of links; let idx = $index; track idx){
-    <li class="nav-link p-3 text-black font-medium">
+    <li class="nav-link p-3 text-black font-semibold grid place-items-center">
       <a [routerLink]="[link.path]">{{ link.title }}</a>
     </li>
     }
