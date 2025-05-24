@@ -9,6 +9,8 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as three from 'three';
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 
@@ -20,6 +22,25 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
 })
 export class HomeComponent {
   elementRef = inject(ElementRef);
+  scene: three.Scene = new three.Scene();
+
+  getCanvas = () => {
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('id', 'canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '50%';
+    canvas.style.left = '50%';
+    canvas.style.translate = '50% 50%';
+    return canvas;
+  };
+  renderer = new three.WebGLRenderer({ alpha: true, canvas: this.getCanvas() });
+  loader = new GLTFLoader();
+  camera = new three.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
   bgHeading: HTMLElement | null = null;
   scrollDelta: number = 0;
   isScrolling: boolean = false;
@@ -58,8 +79,19 @@ export class HomeComponent {
 
   constructor() {
     afterRender(() => {
-      this.bgHeading =
-        this.elementRef.nativeElement.querySelector('.bg-heading');
+      const home = this.elementRef.nativeElement.querySelector('section.home');
+      this.loader.load(
+        'path/to/model.glb',
+
+        (gltf) => {
+          home.appendChild(this.renderer.domElement);
+          this.scene.add(gltf.scene);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
     });
   }
 }
