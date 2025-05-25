@@ -3,7 +3,11 @@
   <div class="line border-e border-b border-ms-darker fixed">
     <div class="page-number z-10 flex text-ms-darker">
       0
-      <span class="text-ms-orange">{{ page }}</span>
+      <app-current-page
+        [model]="model"
+        [currentPage]="currentPage"
+        [maxPages]="maxPages"
+      />
     </div>
     <div
       class="shaped-border w-[100px] translate-x-[50%] translate-y-[50%] bg-white aspect-square border-s border-ms-darker absolute bottom-0 right-0 rotate-45"

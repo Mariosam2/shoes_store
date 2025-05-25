@@ -13,6 +13,7 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%) translateY(41.6%) rotate(90deg);
+  scrollbar-width: none;
 }
 
 .bg-heading::-webkit-scrollbar {

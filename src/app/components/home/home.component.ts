@@ -1,51 +1,48 @@
 import {
-  afterRender,
   Component,
   ElementRef,
   HostListener,
   inject,
+  NgZone,
 } from '@angular/core';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as three from 'three';
-
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin);
+import { CurrentPageComponent } from '../current-page/current-page.component';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [CurrentPageComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
+  maxPages: number = 3;
+  currentPage: number = 1;
   elementRef = inject(ElementRef);
   scene: three.Scene = new three.Scene();
-
+  light = new three.AmbientLight('#ffffff', 2);
   getCanvas = () => {
     const canvas = document.createElement('canvas');
     canvas.setAttribute('id', 'canvas');
     canvas.style.position = 'absolute';
     canvas.style.top = '50%';
     canvas.style.left = '50%';
-    canvas.style.translate = '50% 50%';
+    canvas.style.translate = '-50% -50%';
     return canvas;
   };
-  renderer = new three.WebGLRenderer({ alpha: true, canvas: this.getCanvas() });
+  model: three.Object3D | null = null;
+  renderer = new three.WebGLRenderer({
+    alpha: true,
+    canvas: this.getCanvas(),
+    antialias: true,
+  });
   loader = new GLTFLoader();
-  camera = new three.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
+  camera = new three.PerspectiveCamera(50, 1, 0.1, 1000);
+
   bgHeading: HTMLElement | null = null;
   scrollDelta: number = 0;
   isScrolling: boolean = false;
-  maxPages: number = 3;
-  page: number = 1;
   @HostListener('document:wheel', ['$event'])
   onScroll(e: WheelEvent) {
     if (!this.isScrolling) {
@@ -64,34 +61,63 @@ export class HomeComponent {
       }, 500);
     }
   }
+  animate = () => {
+    requestAnimationFrame(this.animate);
+    this.renderer.render(this.scene, this.camera);
+  };
 
   ngDoCheck() {
     if (!this.isScrolling) {
-      if (this.page > 1 && this.page <= this.maxPages && this.scrollDelta < 0) {
-        this.page--;
+      if (
+        this.currentPage > 1 &&
+        this.currentPage <= this.maxPages &&
+        this.scrollDelta < 0
+      ) {
+        this.currentPage--;
       }
 
-      if (this.page > 0 && this.page < this.maxPages && this.scrollDelta > 0) {
-        this.page++;
+      if (
+        this.currentPage > 0 &&
+        this.currentPage < this.maxPages &&
+        this.scrollDelta > 0
+      ) {
+        this.currentPage++;
       }
     }
   }
 
-  constructor() {
-    afterRender(() => {
-      const home = this.elementRef.nativeElement.querySelector('section.home');
-      this.loader.load(
-        'path/to/model.glb',
+  ngAfterViewInit() {
+    this.bgHeading = this.elementRef.nativeElement.querySelector('.bg-heading');
+    this.bgHeading?.scrollTo(0, 0);
+    const home = this.elementRef.nativeElement.querySelector('section.home');
 
-        (gltf) => {
-          home.appendChild(this.renderer.domElement);
-          this.scene.add(gltf.scene);
-        },
-        undefined,
-        function (error) {
-          console.error(error);
-        }
-      );
+    this.camera.position.z = 1;
+
+    this.renderer.setSize(500, 500);
+    this.scene.add(this.light);
+    home.appendChild(this.renderer.domElement);
+    this.loader.load(
+      '/source/nike_sko_apply_all.gltf',
+
+      (gltf) => {
+        this.model = gltf.scene;
+
+        const box = new three.Box3().setFromObject(this.model);
+        const center = box.getCenter(new three.Vector3());
+
+        this.model.position.sub(center);
+        this.scene.add(this.model);
+      },
+      undefined,
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  constructor(ngZone: NgZone) {
+    ngZone.runOutsideAngular(() => {
+      this.animate();
     });
   }
 }
