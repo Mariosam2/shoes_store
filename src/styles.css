@@ -20,10 +20,13 @@
   --color-ms-muted: #bbb8bb;
   --color-ms-dark: #343434;
   --color-ms-darker: #28282b;
+  --color-ms-white: #ecf0f8;
   --color-ms-orange: #ff7f50;
+  --default-font-family: "Tokyo Regular", "sans-serif";
 }
-* {
-  font-family: "Tokyo Regular", "sans-serif";
+
+body {
+  background-color: var(--color-ms-white);
 }
 
 h1,

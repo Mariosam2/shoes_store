@@ -1,4 +1,13 @@
-<nav class="nav-container absolute top-0 left-0 w-full">
+<nav class="nav-container absolute top-0 left-0 w-full flex items-center">
+  <div class="logo flex items-center p-4">
+    <h1 class="logo-heading text-ms-darker p-2">Drift</h1>
+
+    <img
+      class="w-[40px] aspect-square ms-2 object-cover rounded-full"
+      src="/logo.png"
+      alt="logo"
+    />
+  </div>
   <ul class="nav-links bg-ms-muted flex gap-x-2 w-fit ms-auto mt-4 me-12">
     @for (link of links; let idx = $index; track idx){
     <li class="nav-link p-3 text-black font-semibold grid place-items-center">

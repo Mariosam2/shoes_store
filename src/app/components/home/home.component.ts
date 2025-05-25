@@ -9,6 +9,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as three from 'three';
 import { CurrentPageComponent } from '../current-page/current-page.component';
+import AppLoaderService from '../../app.loader';
 
 @Component({
   selector: 'app-home',
@@ -17,6 +18,7 @@ import { CurrentPageComponent } from '../current-page/current-page.component';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
+  appLoaderService = inject(AppLoaderService);
   maxPages: number = 3;
   currentPage: number = 1;
   elementRef = inject(ElementRef);
@@ -38,7 +40,7 @@ export class HomeComponent {
     antialias: true,
   });
   loader = new GLTFLoader();
-  camera = new three.PerspectiveCamera(50, 1, 0.1, 1000);
+  camera = new three.PerspectiveCamera(40, 1, 0.1, 2000);
 
   bgHeading: HTMLElement | null = null;
   scrollDelta: number = 0;
@@ -58,6 +60,21 @@ export class HomeComponent {
       });
       setTimeout(() => {
         this.isScrolling = false;
+        if (
+          this.currentPage > 1 &&
+          this.currentPage <= this.maxPages &&
+          this.scrollDelta < 0
+        ) {
+          this.currentPage--;
+        }
+
+        if (
+          this.currentPage > 0 &&
+          this.currentPage < this.maxPages &&
+          this.scrollDelta > 0
+        ) {
+          this.currentPage++;
+        }
       }, 500);
     }
   }
@@ -66,38 +83,18 @@ export class HomeComponent {
     this.renderer.render(this.scene, this.camera);
   };
 
-  ngDoCheck() {
-    if (!this.isScrolling) {
-      if (
-        this.currentPage > 1 &&
-        this.currentPage <= this.maxPages &&
-        this.scrollDelta < 0
-      ) {
-        this.currentPage--;
-      }
-
-      if (
-        this.currentPage > 0 &&
-        this.currentPage < this.maxPages &&
-        this.scrollDelta > 0
-      ) {
-        this.currentPage++;
-      }
-    }
-  }
-
   ngAfterViewInit() {
     this.bgHeading = this.elementRef.nativeElement.querySelector('.bg-heading');
     this.bgHeading?.scrollTo(0, 0);
     const home = this.elementRef.nativeElement.querySelector('section.home');
 
-    this.camera.position.z = 1;
+    this.camera.position.z = 3;
 
-    this.renderer.setSize(500, 500);
+    this.renderer.setSize(600, 600);
     this.scene.add(this.light);
     home.appendChild(this.renderer.domElement);
     this.loader.load(
-      '/source/nike_sko_apply_all.gltf',
+      '/nike_air_zoom.glb',
 
       (gltf) => {
         this.model = gltf.scene;
@@ -107,6 +104,7 @@ export class HomeComponent {
 
         this.model.position.sub(center);
         this.scene.add(this.model);
+        console.log('model loaded');
       },
       undefined,
       (error) => {
