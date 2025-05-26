@@ -1,6 +1,6 @@
 <main class="main">
-  <app-loader />
+  <app-loader [isLoading]="appService.getIsLoading()" />
 
-  <app-navbar />
+  <app-navbar [isLoading]="appService.getIsLoading()" />
   <router-outlet />
 </main>

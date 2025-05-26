@@ -1,0 +1,15 @@
+.page-number {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  line-height: 1;
+  translate: 40% 10%;
+  z-index: 1;
+}
+
+.page-number,
+.page-number span {
+  font-family: "Tokyo 2097";
+  font-size: 52px;
+  font-weight: 200;
+}

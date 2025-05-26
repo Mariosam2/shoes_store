@@ -3,8 +3,17 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-class AppLoaderService {
+class AppService {
   isLoading: boolean = true;
+  step: number = 1;
+
+  setStep(value: number) {
+    this.step = value;
+  }
+
+  getStep() {
+    return this.step;
+  }
 
   setIsLoading(value: boolean) {
     this.isLoading = value;
@@ -14,4 +23,4 @@ class AppLoaderService {
   }
 }
 
-export default AppLoaderService;
+export default AppService;

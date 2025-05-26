@@ -9,21 +9,23 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as three from 'three';
 import { CurrentPageComponent } from '../current-page/current-page.component';
-import AppLoaderService from '../../app.loader';
+import AppService from '../../app.loader';
+import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CurrentPageComponent],
+  imports: [CurrentPageComponent, CardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  appLoaderService = inject(AppLoaderService);
+  appService = inject(AppService);
   maxPages: number = 3;
   currentPage: number = 1;
   elementRef = inject(ElementRef);
   scene: three.Scene = new three.Scene();
   light = new three.AmbientLight('#ffffff', 2);
+  directionalLight = new three.DirectionalLight('#ffffff', 1);
   getCanvas = () => {
     const canvas = document.createElement('canvas');
     canvas.setAttribute('id', 'canvas');
@@ -31,6 +33,7 @@ export class HomeComponent {
     canvas.style.top = '50%';
     canvas.style.left = '50%';
     canvas.style.translate = '-50% -50%';
+    canvas.style.zIndex = '2';
     return canvas;
   };
   model: three.Object3D | null = null;
@@ -83,6 +86,12 @@ export class HomeComponent {
     this.renderer.render(this.scene, this.camera);
   };
 
+  constructor(ngZone: NgZone) {
+    ngZone.runOutsideAngular(() => {
+      this.animate();
+    });
+  }
+
   ngAfterViewInit() {
     this.bgHeading = this.elementRef.nativeElement.querySelector('.bg-heading');
     this.bgHeading?.scrollTo(0, 0);
@@ -94,7 +103,7 @@ export class HomeComponent {
     this.scene.add(this.light);
     home.appendChild(this.renderer.domElement);
     this.loader.load(
-      '/nike_air_zoom.glb',
+      '/nike_air_zoom_pegasus_36.glb',
 
       (gltf) => {
         this.model = gltf.scene;
@@ -104,18 +113,15 @@ export class HomeComponent {
 
         this.model.position.sub(center);
         this.scene.add(this.model);
-        console.log('model loaded');
+        this.directionalLight.target = this.model;
+        this.scene.add(this.directionalLight);
+
+        //console.log('model loaded');
       },
       undefined,
       (error) => {
         console.error(error);
       }
     );
-  }
-
-  constructor(ngZone: NgZone) {
-    ngZone.runOutsideAngular(() => {
-      this.animate();
-    });
   }
 }

@@ -1,7 +1,7 @@
 import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import * as three from 'three';
 import { gsap } from 'gsap';
-import AppLoaderService from '../../app.loader';
+import AppService from '../../app.loader';
 @Component({
   selector: 'app-current-page',
   imports: [],
@@ -12,11 +12,12 @@ export class CurrentPageComponent {
   @Input() model: three.Object3D | null = null;
   @Input() maxPages: number = 3;
   @Input() currentPage: number = 1;
+  appService = inject(AppService);
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['currentPage']) {
       const step = changes['currentPage'].currentValue;
-      console.log(step);
+      this.appService.setStep(step);
       if (this.model) {
         if (step == 1) {
           gsap.to(this.model.rotation, {

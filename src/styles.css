@@ -8,7 +8,7 @@
       format("woff"),
     url("../public/fonts/tokyo_regular/tokyoregular-3lmq6-webfont.woff2")
       format("woff2");
-  font-weight: 400, 500, 600, 700;
+  font-weight: 400, 500, 600, 700, 800, 900;
 }
 
 @font-face {
@@ -22,6 +22,7 @@
   --color-ms-darker: #28282b;
   --color-ms-white: #ecf0f8;
   --color-ms-orange: #ff7f50;
+  --color-ms-off-white: #faf9f6;
   --default-font-family: "Tokyo Regular", "sans-serif";
 }
 

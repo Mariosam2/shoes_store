@@ -9,9 +9,10 @@ section.loader {
 .loader.ms-hidden {
   opacity: 0;
   transition: all 0.25s ease-out;
+  z-index: -99999;
 }
 
 .loader.ms-show {
   opacity: 1;
-  transition: all 0.25s ease-out;
+  z-index: 9;
 }

@@ -1,0 +1,171 @@
+<div class="card-container fixed z-10">
+  <div
+    class="bottom-square bg-ms-orange absolute w-[20px] aspect-square right-[12%] bottom-[10%]"
+  ></div>
+  <div
+    class="top-square bg-ms-darker absolute w-[20px] aspect-square right-[10%] bottom-[10%]"
+  ></div>
+  <div
+    class="card absolute"
+    [class]="
+      step === 1
+        ? 'top-0 left-0'
+        : step === 2
+        ? 'top-3 right-12'
+        : 'bottom-12 left-0'
+    "
+  >
+    <div
+      class="content max-w-lg border relative border-ms-darker p-6 bg-ms-off-white z-20"
+    >
+      <h3 class="text-5xl mb-3 text-ms-darker">
+        {{ cardData[step - 1].title }}
+      </h3>
+
+      <p class="lowercase font-light text-base text-ms-dark p-2">
+        {{ cardData[step - 1].content }}
+      </p>
+      <div class="content-bottom flex items-center mt-6">
+        <div class="call-to-action cursor-pointer relative">
+          <span
+            class="text inline-block relative z-10 px-4 py-3 w-fit font-bold"
+            >View More</span
+          >
+          <div class="background bg-ms-orange absolute left-0 top-0 z-0"></div>
+          <div
+            class="shaped-border w-[20px] bg-ms-off-white aspect-square translate-x-[50%] translate-y-[50%] absolute right-0 bottom-0 rotate-45"
+          ></div>
+        </div>
+        <div class="dots flex items-center ms-auto mt-auto">
+          <svg
+            class="size-6"
+            fill="#ff7f50"
+            width="200px"
+            height="200px"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z" />
+          </svg>
+          <svg
+            class="size-6"
+            fill="#ff7f50"
+            width="200px"
+            height="200px"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z" />
+          </svg>
+          <svg
+            class="size-6"
+            fill="#ff7f50"
+            width="200px"
+            height="200px"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="link absolute z-10"
+      [class]="
+        step === 1
+          ? 'bottom-[-120%] left-[50%]'
+          : step === 2
+          ? 'right-[90%] top-[-80%]'
+          : 'top-[-120%] left-[-10%]'
+      "
+    >
+      <svg
+        [class]="step === 1 ? 'block' : 'hidden'"
+        id="link"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 300 300"
+        shape-rendering="geometricPrecision"
+        text-rendering="geometricPrecision"
+        project-id="658865fc692342c4868eca78b817eb91"
+        export-id="be977754fbac47c989c16b5c3ab89853"
+        cached="false"
+      >
+        <path
+          id="path-link"
+          d="M53.145947,107.556299q-.459628,0,0,77.77102h115.826108"
+          transform="matrix(1.068785 0 0 1.01035-7.639193-1.513781)"
+          fill="none"
+          stroke="#ff7f50"
+          stroke-width="0.8"
+        />
+        <ellipse
+          id="circle-link"
+          rx="1.946955"
+          ry="2"
+          transform="matrix(1.027245 0 0 1 174.511178 185.731676)"
+          fill="#ecf0f8"
+          stroke-width="0"
+        />
+      </svg>
+      <svg
+        [class]="step === 2 ? 'block' : 'hidden'"
+        id="link"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 300 300"
+        shape-rendering="geometricPrecision"
+        text-rendering="geometricPrecision"
+        project-id="658865fc692342c4868eca78b817eb91"
+        export-id="26d67f4ec1584a3586322f808259a118"
+        cached="false"
+      >
+        <ellipse
+          id="circle-link"
+          rx="1.946955"
+          ry="2"
+          transform="matrix(1.027245 0 0 1 133.561993 150)"
+          fill="#ecf0f8"
+          stroke-width="0"
+        />
+        <path
+          id="path-link"
+          d="M285.435425,150h-150.970279"
+          fill="none"
+          stroke="#ff7f50"
+          stroke-width="0.6"
+        />
+      </svg>
+      <svg
+        [class]="step === 3 ? 'block' : 'hidden'"
+        id="link"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 300 300"
+        shape-rendering="geometricPrecision"
+        text-rendering="geometricPrecision"
+        project-id="658865fc692342c4868eca78b817eb91"
+        export-id="06cb5a35df6a4804ad8067bdddd94cdb"
+        cached="false"
+      >
+        <ellipse
+          id="circle-link"
+          rx="1.946955"
+          ry="2"
+          transform="matrix(1.027245 0 0 1 283.10234 114.759341)"
+          fill="#ecf0f8"
+          stroke-width="0"
+        />
+        <path
+          id="path-link"
+          d="M163.710045,182.146093v-67.386754h117.392294"
+          transform="translate(.000001 0.000002)"
+          fill="none"
+          stroke="#ff7f50"
+          stroke-width="0.6"
+        />
+      </svg>
+    </div>
+  </div>
+</div>

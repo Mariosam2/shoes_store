@@ -4,7 +4,10 @@ import { ShopComponent } from './components/shop/shop.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  {
+    path: 'home',
+    component: HomeComponent,
+  },
   { path: 'shop', component: ShopComponent },
   { path: 'product/:productUUID', component: ShopComponent },
   { path: 'checkout', component: CheckoutComponent },

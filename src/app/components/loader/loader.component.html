@@ -1,11 +1,9 @@
 <section
   class="loader fixed grid place-items-center"
-  [class]="appLoaderService.getIsLoading() ? 'ms-show' : 'ms-hidden'"
+  [class]="isLoading ? 'ms-show' : 'ms-hidden'"
 >
   <div class="loader-el w-sm grid place-items-center">
-    <div class="counter text-3xl font-semibold pb-2 font-mono">
-      {{ counter }}
-    </div>
+    <div class="counter text-3xl font-semibold pb-2 font-mono"></div>
     <div class="w-[120px] border border-ms-darker h-[18px]">
       <div class="progress-bar bg-ms-darker w-full h-[16px]"></div>
     </div>

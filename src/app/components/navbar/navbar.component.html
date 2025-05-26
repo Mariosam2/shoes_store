@@ -1,18 +1,28 @@
-<nav class="nav-container absolute top-0 left-0 w-full flex items-center">
-  <div class="logo flex items-center p-4">
-    <h1 class="logo-heading text-ms-darker p-2">Drift</h1>
+<nav class="nav-container absolute top-0 left-0 w-full flex items-center z-10">
+  <div class="logo flex items-center p-4 relative">
+    <h1 class="logo-heading text-ms-darker p-4">Drift</h1>
 
     <img
       class="w-[40px] aspect-square ms-2 object-cover rounded-full"
-      src="/logo.png"
+      src="/samurai.png"
       alt="logo"
     />
   </div>
-  <ul class="nav-links bg-ms-muted flex gap-x-2 w-fit ms-auto mt-4 me-12">
-    @for (link of links; let idx = $index; track idx){
-    <li class="nav-link p-3 text-black font-semibold grid place-items-center">
-      <a [routerLink]="[link.path]">{{ link.title }}</a>
-    </li>
-    }
-  </ul>
+  <div class="right-nav ms-auto relative flex items-center">
+    <ul class="nav-links flex gap-x-2 w-fit">
+      @for (link of links; let idx = $index; track idx){
+      <li class="nav-link p-3 text-ms-dark grid place-items-center">
+        <a
+          class="relative"
+          [routerLink]="[link.path]"
+          [routerLinkActive]="['active']"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >{{ link.title }}
+          <div class="border"></div>
+        </a>
+      </li>
+      }
+    </ul>
+    <div class="half-square ms-2 me-12"></div>
+  </div>
 </nav>

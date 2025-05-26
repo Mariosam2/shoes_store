@@ -1,6 +1,12 @@
-import { afterNextRender, Component, inject } from '@angular/core';
+import {
+  afterRender,
+  Component,
+  inject,
+  Input,
+  SimpleChanges,
+} from '@angular/core';
 import gsap from 'gsap';
-import AppLoaderService from '../../app.loader';
+import AppService from '../../app.loader';
 
 @Component({
   selector: 'app-loader',
@@ -9,21 +15,26 @@ import AppLoaderService from '../../app.loader';
   styleUrl: './loader.component.css',
 })
 export class LoaderComponent {
-  counter: number = 0;
-  appLoaderService = inject(AppLoaderService);
+  appService = inject(AppService);
+  @Input() isLoading: boolean;
 
-  constructor() {
-    setTimeout(() => {
-      this.appLoaderService.setIsLoading(false);
-    }, 2000);
-    afterNextRender(() => {
-      gsap.to('.counter', {
-        innerText: 100 + '%',
-        duration: 2,
-        snap: {
-          innerText: 1,
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['isLoading'] && changes['isLoading'].currentValue) {
+      //console.log(changes['isLoading'].currentValue);
+      this.isLoading = changes['isLoading'].currentValue;
+      gsap.fromTo(
+        '.counter',
+        {
+          innerText: 0 + '%',
         },
-      });
+        {
+          innerText: 100 + '%',
+          duration: 2,
+          snap: {
+            innerText: 1,
+          },
+        }
+      );
       gsap.fromTo(
         '.progress-bar',
         {
@@ -35,6 +46,14 @@ export class LoaderComponent {
           scaleX: 1,
         }
       );
-    });
+      setTimeout(() => {
+        this.appService.setIsLoading(false);
+      }, 2000);
+    }
+  }
+
+  constructor() {
+    this.isLoading = this.appService.getIsLoading();
+    afterRender(() => {});
   }
 }

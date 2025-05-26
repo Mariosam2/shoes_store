@@ -1,26 +1,21 @@
 <section class="home">
   <h1 class="bg-heading uppercase cursor-default">tokyo drift 2099</h1>
-  <div class="line border-e border-b border-ms-darker fixed">
-    <div class="page-number z-10 flex text-ms-darker">
-      0 @if(!appLoaderService.getIsLoading()){
-      <app-current-page
-        [model]="model"
-        [currentPage]="currentPage"
-        [maxPages]="maxPages"
-      />
+  @if(!appService.getIsLoading()){
 
-      }
-    </div>
+  <div class="line border-e border-b border-ms-darker fixed">
+    <app-current-page
+      [model]="model"
+      [currentPage]="currentPage"
+      [maxPages]="maxPages"
+    />
+
     <div
       class="shaped-border w-[100px] translate-x-[50%] translate-y-[50%] bg-ms-white aspect-square border-s border-ms-darker absolute bottom-0 right-0 rotate-45"
     ></div>
-    <div class="samurai w-sm fixed bottom-0 left-3">
-      <img
-        class="w-full object-cover h-auto"
-        src="/samurai.png"
-        alt="samurai"
-      />
-    </div>
+
     <div class="navigation"></div>
   </div>
+
+  <app-card [step]="appService.getStep()" />
+  }
 </section>
