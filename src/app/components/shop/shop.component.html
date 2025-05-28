@@ -1,1 +1,11 @@
+<section class="shop min-h-screen grid place-items-center pt-48">
+  <div class="container mx-auto">
+    <div class="filters"></div>
+    <div class="products grid grid-cols-4 gap-x-3 gap-y-6">
+      @for(product of products; track product.productUuid){
 
+      <app-product-card [product]="product" />
+      }
+    </div>
+  </div>
+</section>

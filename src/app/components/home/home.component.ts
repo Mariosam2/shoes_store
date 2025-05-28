@@ -9,7 +9,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as three from 'three';
 import { CurrentPageComponent } from '../current-page/current-page.component';
-import AppService from '../../app.loader';
+import AppService from '../../app.service';
 import { CardComponent } from '../card/card.component';
 
 @Component({

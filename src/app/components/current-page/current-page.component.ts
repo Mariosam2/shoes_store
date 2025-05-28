@@ -1,7 +1,7 @@
 import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import * as three from 'three';
 import { gsap } from 'gsap';
-import AppService from '../../app.loader';
+import AppService from '../../app.service';
 @Component({
   selector: 'app-current-page',
   imports: [],

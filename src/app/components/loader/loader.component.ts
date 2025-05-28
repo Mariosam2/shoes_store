@@ -6,7 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import gsap from 'gsap';
-import AppService from '../../app.loader';
+import AppService from '../../app.service';
 
 @Component({
   selector: 'app-loader',

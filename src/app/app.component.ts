@@ -1,9 +1,13 @@
-import { afterRender, Component, inject } from '@angular/core';
-import { ActivationEnd, RouterEvent, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import {
+  ActivationEnd,
+  RouteConfigLoadEnd,
+  RouterOutlet,
+} from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { LoaderComponent } from './components/loader/loader.component';
-import AppService from './app.loader';
-import { Router, RouterLinkActive } from '@angular/router';
+import AppService from './app.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +20,6 @@ export class AppComponent {
   title = 'shoes_store';
   appService = inject(AppService);
   constructor() {
-    this.router.navigateByUrl('/home');
-
     this.router.events.subscribe((event) => {
       if (event instanceof ActivationEnd) {
         const url = event.snapshot.url[0];

@@ -1,0 +1,39 @@
+@if(product){
+<a class="block" [routerLink]="[`/product/${this.product.productUuid}`]">
+  <div class="product-card col-span-1 cursor-pointer">
+    <div class="product-img w-full">
+      @if(product.medias.length >0){
+      <img
+        class="w-full aspect-square object-cover"
+        [src]="currentImage ? currentImage : product.medias[0].path"
+        alt=""
+      />
+
+      }
+    </div>
+
+    <div class="content bg-ms-off-white p-4">
+      @if(product.medias.length> 1){
+      <div class="thumbnails flex items-center bg-ms-off-white">
+        @for(media of product.medias; let index = $index; track index){
+        <img
+          (mouseleave)="resetCurrentImage()"
+          (mouseover)="setCurrentImage($event)"
+          class="max-w-[60px] pe-2 aspect-video object-cover"
+          [src]="media.path"
+          alt=""
+        />
+        }
+      </div>
+
+      }
+      <h2 class="text-2xl font-bold pt-3">{{ product.title }}</h2>
+      <div class="vendor text-sm pb-3 pt-4">{{ product.vendor.name }}</div>
+      <span class="price font-mono font-semibold text block"
+        >{{ product.price }}&euro;</span
+      >
+    </div>
+  </div>
+</a>
+
+}
