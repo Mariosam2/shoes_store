@@ -1,14 +1,40 @@
 <section class="product pt-48">
-  @if(!isLoading && product){
-  <div class="max-w-5xl grid grid-cols-2 mx-auto gap-x-6">
+  @if(!isLoading && product && appService.getIsShopUrlReady()){
+
+  <div class="max-w-5xl grid grid-cols-2 mx-auto gap-x-6 relative">
+    <div class="previous-route absolute top-0 translate-y-[-100%] left-0">
+      <a
+        class="flex items-center gap-x-2 py-3"
+        [routerLink]="['/' + appService.getShopPath()]"
+        [queryParams]="appService.getShopQueryParams()"
+        ><svg
+          class="size-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
+          />
+        </svg>
+        <span>Back to shop</span>
+      </a>
+    </div>
     <div class="product-img col-span-1">
       <img class="w-full object-cover" [src]="product.medias[0].path" alt="" />
     </div>
-    <div class="product-content flex flex-col col-span-1 p-3">
+    <div class="product-content flex flex-col col-span-1 p-4 bg-ms-off-white">
       <h1 class="text-3xl">{{ product.title }}</h1>
       <div class="vendor py-4">{{ product.vendor.name }}</div>
       <p class="text-ms-muted">{{ product.description }}</p>
-      <div class="add-to-cart cursor-pointer relative w-fit mt-auto">
+      <div
+        (click)="addToCart(product)"
+        class="add-to-cart cursor-pointer relative w-fit mt-auto"
+      >
         <span
           class="text flex items-center relative z-10 px-4 py-3 w-fit font-bold"
           >Add to cart

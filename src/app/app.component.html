@@ -2,5 +2,7 @@
   <app-loader [isLoading]="appService.getIsLoading()" />
 
   <app-navbar [isLoading]="appService.getIsLoading()" />
+  <app-cart [cartItems]="appService.getCartItems()" />
+
   <router-outlet />
 </main>

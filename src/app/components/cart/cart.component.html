@@ -1,0 +1,109 @@
+<div
+  class="cart fixed top-48 min-w-sm h-max bg-ms-off-white p-4 z-30 border border-ms-darker"
+  [class]="this.appService.getCartIsOpen() ? 'ms-show' : 'ms-hidden'"
+>
+  <svg
+    (click)="closeCart()"
+    class="size-5 absolute right-1.5 top-1.5 cursor-pointer"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="1.5"
+    stroke="currentColor"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M6 18 18 6M6 6l12 12"
+    />
+  </svg>
+
+  <div class="cart-heading flex items-center">
+    <svg
+      class="cart-icon size-7 me-2"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+      />
+    </svg>
+    <h2 class="text-xl">Your Cart</h2>
+  </div>
+  @if(cartItems.length> 0 && stringifiedCartItems){
+  <div class="cart-items flex flex-col gap-y-2 pt-5">
+    @for(item of cartItems; track item.productUuid){ @if(item.quantity> 0){
+    <div class="cart-item flex items-center justify-between">
+      <img
+        class="max-w-[80px] aspect-video object-cover"
+        [src]="item.img"
+        alt=""
+      />
+      <div class="content p-3">
+        <h4>{{ item.title }}</h4>
+        <span class="font-mono text-sm">{{ item.price }}&euro;</span>
+      </div>
+      <div class="quantity flex items-center p-3">
+        <svg
+          (click)="appService.addQuantityToCartItem(item.productUuid)"
+          class="plus size-5 cursor-pointer"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
+        </svg>
+        <span class="inline-block font-mono text-sm text-ms-dark px-2">{{
+          item.quantity
+        }}</span>
+        <svg
+          (click)="appService.removeQuantityFromCartItem(item.productUuid)"
+          class="minus size-5 cursor-pointer"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+        </svg>
+      </div>
+    </div>
+    } }
+  </div>
+  <div class="checkout pt-4 mt-4 border-t border-ms-darker flex items-center">
+    <a [routerLink]="['/checkout', { items: stringifiedCartItems }]">
+      <div class="checkout-btn cursor-pointer relative w-fit">
+        <span
+          class="text text-sm tracking-widest inline-block relative z-10 px-4 py-3 w-fit font-bold"
+          >Checkout</span
+        >
+        <div class="background bg-ms-orange absolute left-0 top-0 z-0"></div>
+        <div
+          class="shaped-border w-[20px] bg-ms-off-white aspect-square translate-x-[50%] translate-y-[50%] absolute right-0 bottom-0 rotate-45"
+        ></div>
+      </div>
+    </a>
+    <div class="total text-sm font-semibold ms-auto ps-6">
+      Total:
+      <span class="font-mono inline-block mx-2 w-[55px]"
+        >{{ total }}&euro;</span
+      >
+    </div>
+  </div>
+
+  } @else {
+  <div class="empty px-2 pt-6 pb-4 text-sm mx-auto">Your cart is empty...</div>
+  }
+</div>

@@ -1,1 +1,39 @@
-<p>checkout works!</p>
+<section class="checkout min-h-screen grid grid-cols-2">
+  <div class="payment-form bg-ms-white">
+    <div class="heading flex items-center">
+      <div class="previous-route ms-6">
+        <a
+          class="flex items-center gap-x-2 py-3"
+          [routerLink]="['/' + appService.getShopPath()]"
+          [queryParams]="appService.getShopQueryParams()"
+          ><svg
+            class="size-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
+            />
+          </svg>
+          <span>Back to shop</span>
+        </a>
+      </div>
+      <div class="checkout-logo flex items-center p-4 relative">
+        <h1 class="logo-heading text-ms-darker p-4">Drift</h1>
+
+        <img
+          class="w-[40px] aspect-square ms-2 object-cover rounded-full"
+          src="/samurai.png"
+          alt="logo"
+        />
+      </div>
+    </div>
+    <form action="/" class="payment"></form>
+  </div>
+  <div class="checkout-details bg-ms-darker border-s-2 border-ms-orange"></div>
+</section>

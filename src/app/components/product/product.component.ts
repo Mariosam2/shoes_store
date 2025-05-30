@@ -1,5 +1,5 @@
-import { Component, inject, isDevMode } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute, Params, RouterLink } from '@angular/router';
 import { Product } from '../../types';
 import AppService from '../../app.service';
 import axios from 'axios';
@@ -11,7 +11,7 @@ interface ProductResponse {
 
 @Component({
   selector: 'app-product',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
@@ -20,6 +20,7 @@ export class ProductComponent {
   productUUID: string;
   appService = inject(AppService);
   isLoading: boolean = true;
+  shopQueryParams: Params | null;
   getProduct = async () => {
     try {
       const response = await axios.get<ProductResponse>(
@@ -40,8 +41,36 @@ export class ProductComponent {
     }
   };
 
+  addToCart(product: Product) {
+    const cartItems = this.appService.getCartItems();
+
+    const findCartItem = cartItems.find(
+      (item) => item.productUuid === this.productUUID
+    );
+    if (findCartItem) {
+      this.appService.addQuantityToCartItem(findCartItem.productUuid);
+    } else {
+      const newCartItem = {
+        productUuid: product.productUuid,
+        img: product.medias[0].path,
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+      };
+
+      this.appService.addCartItem(newCartItem);
+    }
+    this.appService.setCartIsOpen(true);
+  }
+
   constructor(route: ActivatedRoute) {
     this.productUUID = route.snapshot.params['productUUID'];
+
+    const shopQueryParams = localStorage.getItem('shopQueryParams');
+    this.shopQueryParams = shopQueryParams ? JSON.parse(shopQueryParams) : null;
+
+    this.appService.setShopQueryParams(this.shopQueryParams);
+    this.appService.setIsShopUrlReady(true);
   }
 
   ngOnInit() {

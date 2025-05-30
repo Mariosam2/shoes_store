@@ -1,0 +1,17 @@
+.checkout-logo .logo-heading {
+  font-size: 3rem;
+}
+
+.previous-route a span {
+  border-bottom: 1px solid transparent;
+}
+
+.previous-route:hover a svg {
+  translate: -8px;
+  transition: all 0.2s ease-in;
+}
+
+.previous-route:hover a span {
+  border-bottom: 1px solid var(--color-ms-darker);
+  transition: all 0.2s ease-in;
+}

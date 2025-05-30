@@ -1,8 +1,15 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import axios from 'axios';
 import { Product } from '../../types';
 import { ProductCardComponent } from '../product-card/product-card.component';
 import AppService from '../../app.service';
+import { filter, pairwise } from 'rxjs';
+import {
+  ActivationEnd,
+  Params,
+  Router,
+  RoutesRecognized,
+} from '@angular/router';
 
 interface ProductsResponse {
   success: boolean;
@@ -15,6 +22,7 @@ interface ProductsResponse {
   styleUrl: './shop.component.css',
 })
 export class ShopComponent {
+  subscribed: boolean = false;
   products: Product[] = [];
   currentPage: number = 1;
   appService = inject(AppService);
@@ -33,6 +41,50 @@ export class ShopComponent {
       //here err is instance of Error
     }
   };
+
+  isObjEmpty(obj: Params) {
+    for (const prop in obj) {
+      if (Object.hasOwn(obj, prop)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  constructor(router: Router) {
+    if (!this.appService.getIsSubscribedToShopRouteEvents()) {
+      router.events
+        .pipe(
+          filter((e) => e instanceof ActivationEnd),
+          pairwise()
+        )
+        .subscribe((events: ActivationEnd[]) => {
+          const snapshot = events[0].snapshot;
+          const path = snapshot.url[0].path;
+          if (path === 'shop') {
+            const queryParams = snapshot.queryParams;
+
+            this.appService.setShopQueryParams(
+              this.isObjEmpty(queryParams) ? null : queryParams
+            );
+
+            this.appService.setIsShopUrlReady(true);
+
+            localStorage.setItem(
+              'shopQueryParams',
+              JSON.stringify(queryParams)
+            );
+
+            //console.log(path, queryParams);
+            //console.log(localStorage);
+
+            this.appService.setIsSubscribedToShopRouteEvents(true);
+          }
+        });
+    }
+  }
+
   ngOnInit() {
     this.getProducts();
   }

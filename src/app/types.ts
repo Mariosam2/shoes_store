@@ -7,6 +7,14 @@ export interface Product {
   vendor: Vendor;
 }
 
+export interface CartItem {
+  productUuid: string;
+  img: string;
+  title: string;
+  price: number;
+  quantity: number;
+}
+
 interface Media {
   path: string;
 }

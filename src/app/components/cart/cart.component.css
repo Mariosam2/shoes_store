@@ -1,14 +1,24 @@
-.add-to-cart {
+.cart.ms-show {
+  right: 0.75rem;
+  transition: all 0.25s ease-in-out;
+}
+
+.cart.ms-hidden {
+  right: -100%;
+  transition: all 0.25s ease-in-out;
+}
+
+.checkout-btn {
   color: var(--color-ms-darker);
   border: 1px solid var(--color-ms-darker);
 }
 
-.add-to-cart .shaped-border {
+.checkout-btn .shaped-border {
   border-left: 1px solid;
   border-color: var(--color-ms-darker);
 }
 
-.add-to-cart .background {
+.checkout-btn .background {
   width: 100%;
   height: 100%;
   transform: scaleX(0);
@@ -16,32 +26,17 @@
   transition: all 0.25s ease-out;
   will-change: transform;
 }
-.add-to-cart:hover .background {
+.checkout-btn:hover .background {
   transform: scaleX(1);
   transition: all 0.25s ease-out;
 }
 
-.add-to-cart .text {
+.checkout-btn .text {
   color: var(--color-ms-darker);
   will-change: transform;
 }
 
-.add-to-cart:hover .text,
-.add-to-cart:hover .cart-icon {
+.checkout-btn:hover .text {
   color: var(--color-ms-white);
   transition: all 0.25s ease-out;
-}
-
-.previous-route a span {
-  border-bottom: 1px solid transparent;
-}
-
-.previous-route:hover a svg {
-  translate: -8px;
-  transition: all 0.2s ease-in;
-}
-
-.previous-route:hover a span {
-  border-bottom: 1px solid var(--color-ms-darker);
-  transition: all 0.2s ease-in;
 }
