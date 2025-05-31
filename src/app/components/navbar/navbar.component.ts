@@ -22,7 +22,7 @@ interface Link {
 export class NavbarComponent {
   @Input() isLoading: boolean = true;
   appService = inject(AppService);
-  isCheckoutRoute: boolean = false;
+  showNavbar: boolean = false;
   router = new Router();
   links: Link[] = [
     { path: '/home', title: 'home' },
@@ -38,17 +38,23 @@ export class NavbarComponent {
       if (event instanceof ActivationEnd) {
         const path = event.snapshot.url[0].path;
 
-        if (path === 'checkout') {
-          this.isCheckoutRoute = true;
+        if (path === 'checkout' || path === 'after-payment') {
+          this.showNavbar = false;
         } else {
-          this.isCheckoutRoute = false;
+          this.showNavbar = true;
         }
       }
     });
 
     afterNextRender(() => {
-      gsap.fromTo('.logo', { opacity: 0 }, { duration: 0.5, opacity: 1 });
-      gsap.fromTo('.right-nav', { opacity: 0 }, { duration: 0.5, opacity: 1 });
+      if (this.showNavbar) {
+        gsap.fromTo('.logo', { opacity: 0 }, { duration: 0.5, opacity: 1 });
+        gsap.fromTo(
+          '.right-nav',
+          { opacity: 0 },
+          { duration: 0.5, opacity: 1 }
+        );
+      }
     });
   }
 }

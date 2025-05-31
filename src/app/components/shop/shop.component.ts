@@ -1,4 +1,10 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  EventEmitter,
+  inject,
+  Output,
+} from '@angular/core';
 import axios from 'axios';
 import { Product } from '../../types';
 import { ProductCardComponent } from '../product-card/product-card.component';
@@ -18,10 +24,12 @@ interface ProductsResponse {
 @Component({
   selector: 'app-shop',
   imports: [ProductCardComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css',
 })
 export class ShopComponent {
+  loading: boolean;
   subscribed: boolean = false;
   products: Product[] = [];
   currentPage: number = 1;
@@ -32,7 +40,13 @@ export class ShopComponent {
         this.appService.apiUrl + `/products?page=${this.currentPage}`
       );
       this.products = response.data.products;
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
     } catch (err) {
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
       //create a error component and redirect to it
       /* if (axios.isAxiosError(err)) {
         //with status and message
@@ -53,6 +67,7 @@ export class ShopComponent {
   }
 
   constructor(router: Router) {
+    this.loading = true;
     if (!this.appService.getIsSubscribedToShopRouteEvents()) {
       router.events
         .pipe(

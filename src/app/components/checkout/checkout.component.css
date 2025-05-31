@@ -15,3 +15,60 @@
   border-bottom: 1px solid var(--color-ms-darker);
   transition: all 0.2s ease-in;
 }
+
+#address-element .p-Grid {
+  display: flex;
+}
+.pay-btn {
+  color: var(--color-ms-dark);
+  border: 1px solid var(--color-ms-orange);
+}
+
+.pay-btn .shaped-border {
+  border-left: 1px solid;
+  border-color: var(--color-ms-orange);
+}
+
+.pay-btn {
+  background-color: var(--color-ms-white);
+}
+
+.pay-btn:hover {
+  background-color: var(--color-ms-orange);
+  transition: all 0.25s ease-out;
+}
+
+.pay-btn:hover span {
+  color: var(--color-ms-white);
+}
+
+.stripe-email-label {
+  margin-bottom: 0.25rem;
+}
+
+.stripe-email-label,
+#email {
+  color: #30313d;
+  font-size: 0.93rem;
+}
+
+.stripe-email-label,
+#email,
+.email-error {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+#email {
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 6px rgba(0, 0, 0, 0.02);
+  background-color: white;
+  border-radius: 5px;
+  padding: 0.6rem;
+  transition: all 0.15s ease, border 0.15s ease, box-shadow 0.15s ease,
+    color 0.15s ease;
+}
+#email:focus {
+  outline: 0px;
+
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 6px rgba(0, 0, 0, 0.02),
+    0 0 0 3px hsla(210, 96%, 45%, 25%), 0 1px 1px 0 rgba(0, 0, 0, 0.08);
+}

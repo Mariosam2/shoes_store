@@ -3,6 +3,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ShopComponent } from './components/shop/shop.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ProductComponent } from './components/product/product.component';
+import { AfterPaymentComponent } from './components/after-payment/after-payment.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: 'shop', component: ShopComponent },
   { path: 'product/:productUUID', component: ProductComponent },
   { path: 'checkout', component: CheckoutComponent },
+  { path: 'after-payment', component: AfterPaymentComponent },
 ];

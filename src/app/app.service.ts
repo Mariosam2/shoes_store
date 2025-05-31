@@ -11,6 +11,12 @@ class AppService {
   isLoading: boolean = false;
   step: number = 1;
   apiUrl: string = isDevMode() ? environment.apiURL : prodEnvironment.apiURL;
+  stripePublic: string = isDevMode()
+    ? environment.stripePublic
+    : prodEnvironment.stripePublic;
+  stripeSecret: string = isDevMode()
+    ? environment.stripeSecret
+    : prodEnvironment.stripeSecret;
   shopPath: string = 'shop';
   shopQueryParams: Params | null = null;
   isShopUrlReady: boolean = false;

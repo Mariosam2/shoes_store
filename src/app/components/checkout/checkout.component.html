@@ -33,7 +33,85 @@
         />
       </div>
     </div>
-    <form action="/" class="payment"></form>
+    <form
+      action="/"
+      class="flex items-start max-w-xl mx-auto gap-x-3"
+      id="payment-form"
+    >
+      <div class="user-infos">
+        <div class="flex flex-col mb-3.5">
+          <label for="email" class="stripe-email-label">Email</label>
+          <input
+            class="border focus:border-[#0570de]"
+            [class]="
+              emailError !== null ? ' border-red-500' : 'border-[#e6e6e6]'
+            "
+            [(ngModel)]="email"
+            (change)="resetEmailError()"
+            type="text"
+            name="email"
+            id="email"
+          />
+          <span class="email-error text-red-500 text-sm">{{ emailError }}</span>
+        </div>
+        <div id="address-element"></div>
+      </div>
+      <div id="payment-element"></div>
+    </form>
   </div>
-  <div class="checkout-details bg-ms-darker border-s-2 border-ms-orange"></div>
+  <div
+    class="checkout-details p-3 text-ms-white bg-ms-darker border-s-2 border-ms-orange"
+  >
+    <div class="checkout max-w-xl mx-auto pt-12">
+      <h2 class="text-2xl pb-3">Order details:</h2>
+      @for(item of items; track item.productUuid){
+      <div class="order-item flex items-center py-3">
+        <img
+          class="max-w-[120px] aspect-video object-cover"
+          [src]="item.img"
+          alt=""
+        />
+        <div class="content p-3">
+          <h4>{{ item.title }}</h4>
+          <span class="font-mono text-sm">{{ item.price }}&euro;</span>
+        </div>
+        <div class="quantity flex items-center p-3 ms-auto">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+          <span class="inline-block font-mono text-lg text-ms-white px-2">{{
+            item.quantity
+          }}</span>
+        </div>
+      </div>
+      }
+      <div class="total font-mono w-fit ms-auto pe-3 py-4">
+        Total:
+        {{ total }}
+      </div>
+      <div
+        (click)="payOrder($event)"
+        class="pay-btn cursor-pointer relative w-fit mt-6"
+      >
+        <span
+          class="text tracking-widest inline-block relative z-10 px-3 py-2 w-fit font-bold"
+          >Pay Order
+        </span>
+        <div
+          class="shaped-border w-[20px] bg-ms-darker aspect-square translate-x-[50%] translate-y-[50%] absolute right-0 bottom-0 rotate-45 z-20"
+        ></div>
+      </div>
+    </div>
+  </div>
 </section>

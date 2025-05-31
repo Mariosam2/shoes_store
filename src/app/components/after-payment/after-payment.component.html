@@ -1,0 +1,74 @@
+<section class="after-payment bg-ms-off-white grid place-items-center h-screen">
+  @if(isSuccessfull){
+  <div class="success max-w-md mx-auto">
+    <lottie-player
+      class="max-w-[300px] mx-auto"
+      src="/success.json"
+      autoplay
+      speed="0.75"
+    ></lottie-player>
+    <div class="text-ms-darker text-xl text-center mt-4">
+      Your order has been processed!
+    </div>
+    <div
+      class="previous-route bg-ms-orange w-fit text-ms-white p-3 font-semibold mx-auto mt-6"
+    >
+      <a
+        class="flex items-center gap-x-2"
+        [routerLink]="['/' + appService.getShopPath()]"
+        [queryParams]="appService.getShopQueryParams()"
+        ><svg
+          class="size-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
+          />
+        </svg>
+        <span>Back to shop</span>
+      </a>
+    </div>
+  </div>
+
+  } @else {
+  <div class="error max-w-md mx-auto">
+    <lottie-player
+      class="max-w-[300px] mx-auto"
+      src="/error.json"
+      autoplay
+      speed="0.75"
+    ></lottie-player>
+    <div class="text-ms-darker text-lg text-center mt-4">{{ error }}</div>
+    <div
+      class="previous-route bg-ms-orange w-fit text-ms-white p-3 font-semibold mx-auto mt-6"
+    >
+      <a
+        class="flex items-center gap-x-2"
+        [routerLink]="['/' + appService.getShopPath()]"
+        [queryParams]="appService.getShopQueryParams()"
+        ><svg
+          class="size-6"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18"
+          />
+        </svg>
+        <span>Back to shop</span>
+      </a>
+    </div>
+  </div>
+  }
+</section>

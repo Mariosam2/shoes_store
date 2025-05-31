@@ -31,6 +31,10 @@
       <h1 class="text-3xl">{{ product.title }}</h1>
       <div class="vendor py-4">{{ product.vendor.name }}</div>
       <p class="text-ms-muted">{{ product.description }}</p>
+      <span class="price font-mono font-semibold text-lg block pt-4"
+        >{{ product.price }}&euro;
+      </span>
+
       <div
         (click)="addToCart(product)"
         class="add-to-cart cursor-pointer relative w-fit mt-auto"
