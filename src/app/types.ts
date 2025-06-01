@@ -7,6 +7,11 @@ export interface Product {
   vendor: Vendor;
 }
 
+export interface SearchedProduct
+  extends Pick<Product, 'productUuid' | 'title' | 'price'> {
+  image: string;
+}
+
 export interface AxiosError extends Error {
   status: number;
 }
@@ -29,7 +34,7 @@ interface Media {
   path: string;
 }
 
-interface Vendor {
+export interface Vendor {
   vendorUuid: string;
   name: string;
 }

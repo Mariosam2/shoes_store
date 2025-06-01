@@ -1,22 +1,40 @@
-<section class="shop min-h-screen grid place-items-center">
-  <div class="container mx-auto">
-    <div class="filters"></div>
+<section class="shop flex">
+  <app-filters />
+  <div
+    class="products-container relative ms-auto px-6"
+    [class]="loading? `h-[600px] overflow-hidden` : ''"
+  >
     @if(loading){
-    <lottie-player
-      class="max-w-[300px] mx-auto"
-      src="/loader.json"
-      autoplay
-      speed="1"
-      loop
-    ></lottie-player>
-    }@else {
-    <div class="products grid grid-cols-4 gap-x-3 gap-y-3 pt-48 pb-24">
+    <div
+      class="loader absolute left-0 top-0 bottom-0 right-0 bg-ms-white grid place-items-center"
+    >
+      <lottie-player
+        class="max-w-[300px] h-[300px] mx-auto"
+        src="/loader.json"
+        autoplay
+        speed="1"
+        loop
+      ></lottie-player>
+    </div>
+    }
+    <div class="products grid grid-cols-4 gap-x-3 gap-y-3 pb-24 relative">
       @for(product of appService.getProducts(); track product.productUuid){
 
       <app-product-card [product]="product" />
       }
     </div>
-
-    }
   </div>
 </section>
+@if(pages && currentPage < pages){
+<div class="load-more-container ms-auto">
+  <div class="load-more w-fit cursor-pointer sticky bottom-0 left-0 mx-auto">
+    <button
+      (click)="loadMore()"
+      class="load-more-btn cursor-pointer font-semibold bg-ms-off-white block mx-auto border border-ms-darker text-ms-darker px-4 py-3"
+    >
+      Load more
+    </button>
+  </div>
+</div>
+
+}

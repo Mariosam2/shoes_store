@@ -1,0 +1,13 @@
+.products {
+  z-index: -1;
+}
+
+.products-container,
+.load-more-container {
+  width: calc(100% - 250px);
+}
+
+.load-more-btn:hover {
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 32px 60px 0px;
+  transition: all 0.25s ease;
+}

@@ -25,6 +25,10 @@ class AppService {
   cartItems: CartItem[] = [];
   cartIsOpen: boolean = false;
 
+  addProducts(value: Product[]) {
+    this.products = [...this.products, ...value];
+  }
+
   setProducts(value: Product[]) {
     this.products = value;
   }

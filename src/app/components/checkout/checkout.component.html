@@ -46,7 +46,7 @@
     </div>
     <form
       action="/"
-      class="flex items-start max-w-xl mx-auto gap-x-3"
+      class="flex items-start max-w-xl mx-auto gap-x-3 pt-6"
       id="payment-form"
     >
       <div class="user-infos">
@@ -58,7 +58,7 @@
               emailError !== null ? ' border-red-500' : 'border-[#e6e6e6]'
             "
             [(ngModel)]="email"
-            (change)="resetEmailError()"
+            (input)="resetEmailError()"
             type="text"
             name="email"
             id="email"
@@ -112,7 +112,7 @@
         {{ total }}
       </div>
       <div
-        (click)="payOrder($event)"
+        (click)="payOrder()"
         class="pay-btn cursor-pointer relative w-fit mt-6"
         [class]="submitting ? 'disable' : ''"
       >

@@ -45,7 +45,7 @@ export class CheckoutComponent {
     this.emailError = null;
   };
 
-  payOrder = async (e: Event) => {
+  payOrder = async () => {
     this.submitting = true;
     const updateResult = await this.checkout?.updateEmail(this.email);
     const isValid = updateResult?.type !== 'error';

@@ -38,3 +38,8 @@ h4 {
   font-weight: 600;
   font-style: normal;
 }
+
+html,
+body {
+  height: 100%;
+}
