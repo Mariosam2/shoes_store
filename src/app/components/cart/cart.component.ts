@@ -19,6 +19,11 @@ export class CartComponent {
     this.appService.setCartIsOpen(false);
   }
 
+  clearCart() {
+    this.appService.setCartItems([]);
+    this.appService.setCartIsOpen(false);
+  }
+
   calcTotal(cartItems: CartItem[]): string {
     let total = 0;
     for (let i = 0; i < cartItems.length; i++) {

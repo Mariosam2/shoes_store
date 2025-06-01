@@ -26,7 +26,10 @@
         {{ cardData[step - 1].content }}
       </p>
       <div class="content-bottom flex items-center mt-6">
-        <div class="call-to-action cursor-pointer relative">
+        <a
+          routerLink="/shop"
+          class="call-to-action cursor-pointer relative block"
+        >
           <span
             class="text inline-block relative z-10 px-4 py-3 w-fit font-bold"
             >View More</span
@@ -35,7 +38,7 @@
           <div
             class="shaped-border w-[20px] bg-ms-off-white aspect-square translate-x-[50%] translate-y-[50%] absolute right-0 bottom-0 rotate-45"
           ></div>
-        </div>
+        </a>
         <div class="dots flex items-center ms-auto mt-auto">
           <svg
             class="size-6"

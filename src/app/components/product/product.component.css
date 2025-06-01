@@ -45,3 +45,7 @@
   border-bottom: 1px solid var(--color-ms-darker);
   transition: all 0.2s ease-in;
 }
+
+.thumbnail .layover {
+  transition: all 0.2s ease-in;
+}

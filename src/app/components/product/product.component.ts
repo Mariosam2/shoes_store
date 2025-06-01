@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Params, RouterLink } from '@angular/router';
-import { Product } from '../../types';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
+import { isAxiosError, Product } from '../../types';
 import AppService from '../../app.service';
 import axios from 'axios';
 
@@ -8,18 +8,20 @@ interface ProductResponse {
   success: boolean;
   product: Product;
 }
-
 @Component({
   selector: 'app-product',
   imports: [RouterLink],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product.component.html',
   styleUrl: './product.component.css',
 })
 export class ProductComponent {
-  product: Product | null = null;
+  router = new Router();
+  loading: boolean = false;
+  product: Product | undefined = undefined;
   productUUID: string;
   appService = inject(AppService);
-  isLoading: boolean = true;
+  currentImage: string | null = null;
   shopQueryParams: Params | null;
   getProduct = async () => {
     try {
@@ -28,18 +30,38 @@ export class ProductComponent {
       );
 
       this.product = response.data.product;
-      this.isLoading = false;
-    } catch (e) {
-      //create a error component and redirect to it
-      /* if (axios.isAxiosError(err)) {
-        //with status and message
-      } */
-      //with message only
-      //here err is instance of Error
-
-      this.isLoading = false;
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
+    } catch (err) {
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
+      if (isAxiosError(err)) {
+        this.router.navigateByUrl(
+          `/error?status="${err.status}"&message="${err.message}"`
+        );
+      } else {
+        this.router.navigateByUrl(`/error?message="${(err as Error).message}"`);
+      }
     }
   };
+
+  setCurrentImage(e: MouseEvent) {
+    const currentImageElement = (e.currentTarget as HTMLElement)
+      .children[0] as HTMLElement;
+    const layover = (e.currentTarget as HTMLElement).children[1] as HTMLElement;
+    layover.style.opacity = '1';
+    const currentImagePath = currentImageElement.getAttribute('src');
+    if (typeof currentImagePath === 'string') {
+      this.currentImage = currentImagePath;
+    }
+  }
+  resetCurrentImage(e: MouseEvent) {
+    const layover = (e.currentTarget as HTMLElement).children[1] as HTMLElement;
+    layover.style.opacity = '0';
+    this.currentImage = null;
+  }
 
   addToCart(product: Product) {
     const cartItems = this.appService.getCartItems();
@@ -73,7 +95,12 @@ export class ProductComponent {
     this.appService.setIsShopUrlReady(true);
   }
 
-  ngOnInit() {
-    this.getProduct();
+  async ngOnInit() {
+    if (this.appService.getProduct(this.productUUID)) {
+      this.product = this.appService.getProduct(this.productUUID);
+    } else {
+      this.loading = true;
+      await this.getProduct();
+    }
   }
 }

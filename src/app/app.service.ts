@@ -2,7 +2,7 @@ import { Injectable, isDevMode } from '@angular/core';
 import { environment } from '../environment/environment';
 import { prodEnvironment } from '../environment/environtment.prod';
 import { Params } from '@angular/router';
-import { CartItem } from './types';
+import { CartItem, Product } from './types';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +10,7 @@ import { CartItem } from './types';
 class AppService {
   isLoading: boolean = false;
   step: number = 1;
+  products: Product[] = [];
   apiUrl: string = isDevMode() ? environment.apiURL : prodEnvironment.apiURL;
   stripePublic: string = isDevMode()
     ? environment.stripePublic
@@ -23,6 +24,18 @@ class AppService {
   isSubscribedToShopRouteEvents: boolean = false;
   cartItems: CartItem[] = [];
   cartIsOpen: boolean = false;
+
+  setProducts(value: Product[]) {
+    this.products = value;
+  }
+
+  getProduct(uuid: string) {
+    return this.products.find((p) => p.productUuid === uuid);
+  }
+
+  getProducts() {
+    return this.products;
+  }
 
   getCartIsOpen() {
     return this.cartIsOpen;
@@ -38,6 +51,7 @@ class AppService {
 
   setCartItems(value: CartItem[]) {
     this.cartItems = value;
+    localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
   }
 
   removeQuantityFromCartItem(uuid: string) {

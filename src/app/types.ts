@@ -7,6 +7,16 @@ export interface Product {
   vendor: Vendor;
 }
 
+export interface AxiosError extends Error {
+  status: number;
+}
+
+export const isAxiosError = (obj: unknown): obj is AxiosError => {
+  if (obj) {
+    return typeof (obj as AxiosError).status === 'number';
+  }
+  return false;
+};
 export interface CartItem {
   productUuid: string;
   img: string;

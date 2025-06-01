@@ -11,7 +11,7 @@
     ></lottie-player>
     }@else {
     <div class="products grid grid-cols-4 gap-x-3 gap-y-3 pt-48 pb-24">
-      @for(product of products; track product.productUuid){
+      @for(product of appService.getProducts(); track product.productUuid){
 
       <app-product-card [product]="product" />
       }

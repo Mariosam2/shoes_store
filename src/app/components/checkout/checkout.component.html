@@ -1,4 +1,15 @@
 <section class="checkout min-h-screen grid grid-cols-2">
+  @if(paymentLoading || addressLoading){
+  <div class="loader fixed left-0 top-0 bottom-0 w-full z-40 bg-ms-white">
+    <lottie-player
+      class="max-w-[300px] mx-auto"
+      src="/loader.json"
+      autoplay
+      speed="1"
+      loop
+    ></lottie-player>
+  </div>
+  }
   <div class="payment-form bg-ms-white">
     <div class="heading flex items-center">
       <div class="previous-route ms-6">
@@ -103,10 +114,19 @@
       <div
         (click)="payOrder($event)"
         class="pay-btn cursor-pointer relative w-fit mt-6"
+        [class]="submitting ? 'disable' : ''"
       >
         <span
-          class="text tracking-widest inline-block relative z-10 px-3 py-2 w-fit font-bold"
-          >Pay Order
+          class="text tracking-widest inline-block px-3 py-2 w-fit font-bold relative"
+        >
+          <span [class]="submitting ? 'opacity-0' : 'opacity-100'"
+            >Pay Order
+          </span>
+          @if(submitting){
+          <div
+            class="ms-loader absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
+          ></div>
+          }
         </span>
         <div
           class="shaped-border w-[20px] bg-ms-darker aspect-square translate-x-[50%] translate-y-[50%] absolute right-0 bottom-0 rotate-45 z-20"

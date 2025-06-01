@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CartItem } from '../../types';
+import { CartItem, isAxiosError } from '../../types';
 import AppService from '../../app.service';
 import { FormsModule } from '@angular/forms'; //
 import {
@@ -19,10 +19,14 @@ interface CreateCheckoutResponse {
 @Component({
   selector: 'app-checkout',
   imports: [RouterLink, FormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent {
+  paymentLoading: boolean = true;
+  addressLoading: boolean = true;
+  submitting: boolean = false;
   private activatedRoute = inject(ActivatedRoute);
   router = new Router();
   email: string = '';
@@ -42,19 +46,23 @@ export class CheckoutComponent {
   };
 
   payOrder = async (e: Event) => {
-    e.preventDefault();
-
+    this.submitting = true;
     const updateResult = await this.checkout?.updateEmail(this.email);
     const isValid = updateResult?.type !== 'error';
     if (isValid) {
       const checkoutResult = await this.checkout?.confirm();
+      setTimeout(() => (this.submitting = false), 500);
       if (checkoutResult?.type === 'error') {
-        this.router.navigateByUrl(
-          `/after-payment?error=${checkoutResult.error.message}`
-        );
+        setTimeout(() => (this.submitting = false), 500);
+        if (checkoutResult.error.code === 'paymentFailed') {
+          this.router.navigateByUrl(
+            `/after-payment?error=${checkoutResult.error.message}`
+          );
+        }
       }
     } else {
       this.emailError = updateResult.error.message;
+      setTimeout(() => (this.submitting = false), 500);
     }
   };
 
@@ -72,7 +80,6 @@ export class CheckoutComponent {
         }
       )
       .then((res) => {
-        console.log(res);
         return res.data.clientSecret;
       });
   };
@@ -94,12 +101,25 @@ export class CheckoutComponent {
         paymentElement.mount('#payment-element');
         const addressElement = this.checkout.createShippingAddressElement();
         addressElement.mount('#address-element');
+        paymentElement.on('ready', () => {
+          setTimeout(() => (this.paymentLoading = false), 750);
+        });
+        addressElement.on('ready', () => {
+          setTimeout(() => (this.addressLoading = false), 750);
+        });
         this.total = this.checkout.session().total.total.amount;
       }
 
       //continute  with the stripe documentation
     } catch (err) {
       //redirect to an error component
+      if (isAxiosError(err)) {
+        this.router.navigateByUrl(
+          `/error?status="${err.status}"&message="${err.message}"`
+        );
+      } else {
+        this.router.navigateByUrl(`/error?message="${(err as Error).message}"`);
+      }
     }
   }
 

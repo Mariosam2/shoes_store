@@ -1,4 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import gsap from 'gsap';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
@@ -6,7 +7,7 @@ gsap.registerPlugin(DrawSVGPlugin);
 
 @Component({
   selector: 'app-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css',
 })
