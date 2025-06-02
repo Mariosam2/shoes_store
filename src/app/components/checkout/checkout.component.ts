@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CartItem, isAxiosError } from '../../types';
+import { CartItem, HttpResponse, isAxiosError } from '../../types';
 import AppService from '../../app.service';
 import { FormsModule } from '@angular/forms'; //
 import {
@@ -11,8 +11,7 @@ import {
 } from '@stripe/stripe-js';
 import axios from 'axios';
 
-interface CreateCheckoutResponse {
-  success: boolean;
+interface CreateCheckoutResponse extends HttpResponse {
   clientSecret: string;
 }
 

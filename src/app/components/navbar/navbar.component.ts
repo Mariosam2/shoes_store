@@ -8,12 +8,11 @@ import {
 import { FormsModule } from '@angular/forms';
 import gsap from 'gsap';
 import AppService from '../../app.service';
-import { SearchedProduct } from '../../types';
+import { HttpResponse, SearchedProduct } from '../../types';
 import axios from 'axios';
 import { debounce } from 'lodash';
 
-interface SearchResponse {
-  success: boolean;
+interface SearchResponse extends HttpResponse {
   results: {
     products: SearchedProduct[];
     categories: [];
@@ -53,6 +52,7 @@ export class NavbarComponent {
           this.appService.apiUrl + `/products/search?query=${this.query}`
         );
         this.searchProducts = response.data.results.products;
+        this.appService.setShowResults(true);
       } catch (error) {
         this.searchError = (error as Error).message;
       }
@@ -80,6 +80,15 @@ export class NavbarComponent {
           this.showNavbar = true;
         }
       }
+
+      window.addEventListener('click', (e: Event) => {
+        const searchbar = document.querySelector('.searchbar');
+        const target = e.target as Node;
+        //console.log(target);
+        if (searchbar && !searchbar?.contains(target)) {
+          this.appService.setShowResults(false);
+        }
+      });
     });
 
     afterNextRender(() => {

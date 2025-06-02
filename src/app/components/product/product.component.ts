@@ -1,11 +1,10 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
-import { isAxiosError, Product } from '../../types';
+import { HttpResponse, isAxiosError, Product } from '../../types';
 import AppService from '../../app.service';
 import axios from 'axios';
 
-interface ProductResponse {
-  success: boolean;
+interface ProductResponse extends HttpResponse {
   product: Product;
 }
 @Component({
@@ -87,7 +86,7 @@ export class ProductComponent {
 
   constructor(route: ActivatedRoute) {
     this.productUUID = route.snapshot.params['productUUID'];
-
+    this.appService.setShowResults(false);
     const shopQueryParams = localStorage.getItem('shopQueryParams');
     this.shopQueryParams = shopQueryParams ? JSON.parse(shopQueryParams) : null;
 

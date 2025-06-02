@@ -4,12 +4,21 @@ export interface Product {
   title: string;
   price: number;
   medias: Media[];
+  category: Category;
+  sizes: Size[];
   vendor: Vendor;
 }
 
 export interface SearchedProduct
-  extends Pick<Product, 'productUuid' | 'title' | 'price'> {
+  extends Pick<
+    Product,
+    'productUuid' | 'title' | 'price' | 'category' | 'sizes'
+  > {
   image: string;
+}
+
+export interface HttpResponse {
+  success: boolean;
 }
 
 export interface AxiosError extends Error {
@@ -30,8 +39,17 @@ export interface CartItem {
   quantity: number;
 }
 
+interface Size {
+  sizeNumber: number;
+}
+
 interface Media {
   path: string;
+}
+
+export interface Category {
+  categoryUuid: string;
+  name: string;
 }
 
 export interface Vendor {

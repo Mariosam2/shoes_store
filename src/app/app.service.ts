@@ -8,6 +8,7 @@ import { CartItem, Product } from './types';
   providedIn: 'root',
 })
 class AppService {
+  showResults: boolean = false;
   isLoading: boolean = false;
   step: number = 1;
   products: Product[] = [];
@@ -19,11 +20,28 @@ class AppService {
     ? environment.stripeSecret
     : prodEnvironment.stripeSecret;
   shopPath: string = 'shop';
+  shopLoading: boolean = false;
   shopQueryParams: Params | null = null;
   isShopUrlReady: boolean = false;
   isSubscribedToShopRouteEvents: boolean = false;
   cartItems: CartItem[] = [];
   cartIsOpen: boolean = false;
+
+  getShopLoading() {
+    return this.shopLoading;
+  }
+
+  setShopLoading(value: boolean) {
+    this.shopLoading = value;
+  }
+
+  getShowResults() {
+    return this.showResults;
+  }
+
+  setShowResults(value: boolean) {
+    this.showResults = value;
+  }
 
   addProducts(value: Product[]) {
     this.products = [...this.products, ...value];

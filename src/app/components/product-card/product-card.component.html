@@ -1,5 +1,5 @@
 @if(product){
-<a class="block" [routerLink]="[`/product/${this.product.productUuid}`]">
+<a class="block" [routerLink]="[`/product/${product.productUuid}`]">
   <div class="product-card col-span-1 cursor-pointer">
     <div class="product-img w-full">
       @if(product.medias.length >0){
@@ -12,7 +12,10 @@
       }
     </div>
 
-    <div class="content bg-ms-off-white p-4">
+    <div class="content bg-ms-off-white p-4 relative">
+      <div class="category text-ms-muted p-2 absolute right-0 top-0">
+        {{ product.category }}
+      </div>
       @if(product.medias.length> 1){
       <div class="thumbnails flex items-center bg-ms-off-white">
         @for(media of product.medias; let index = $index; track index){
