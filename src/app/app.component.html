@@ -1,8 +1,8 @@
 <main class="main">
-  <app-loader [isLoading]="appService.getIsLoading()" />
+  <app-loader />
 
-  <app-navbar [isLoading]="appService.getIsLoading()" />
-  <app-cart [cartItems]="appService.getCartItems()" />
+  <app-navbar [isLoading]="appLoading()" />
+  <app-cart [cartProducts]="cartService.getCartProducts()" />
 
   <router-outlet />
 </main>

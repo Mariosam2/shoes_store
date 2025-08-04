@@ -5,37 +5,23 @@ import {
   RouterLink,
   RouterLinkActive,
 } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import gsap from 'gsap';
-import AppService from '../../app.service';
-import { HttpResponse, SearchedProduct } from '../../types';
-import axios from 'axios';
-import { debounce } from 'lodash';
-
-interface SearchResponse extends HttpResponse {
-  results: {
-    products: SearchedProduct[];
-    categories: [];
-  };
-}
-
-interface Link {
-  path: string;
-  title: string;
-}
+import AppService from '../../services/app.service';
+import { CartService } from '../../services/cart.service';
+import { Link } from '../../shared/types';
+import { SearchbarComponent } from '../searchbar/searchbar.component';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive, FormsModule],
+  imports: [RouterLink, RouterLinkActive, SearchbarComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  @Input() isLoading: boolean = true;
-  query: string = '';
-  searchError: string | null = '';
-  searchProducts: SearchedProduct[] = [];
   appService = inject(AppService);
+  cartService = inject(CartService);
+
+  @Input() isLoading: boolean = true;
   showNavbar: boolean = false;
   isHomeRoute: boolean = false;
   router = new Router();
@@ -43,27 +29,6 @@ export class NavbarComponent {
     { path: '/home', title: 'home' },
     { path: '/shop', title: 'shop' },
   ];
-
-  search = async () => {
-    //console.log('search', this.query);
-    if (this.query.trim() !== '') {
-      try {
-        const response = await axios.get<SearchResponse>(
-          this.appService.apiUrl + `/products/search?query=${this.query}`
-        );
-        this.searchProducts = response.data.results.products;
-        this.appService.setShowResults(true);
-      } catch (error) {
-        this.searchError = (error as Error).message;
-      }
-    }
-  };
-
-  debouncedSearch = debounce(this.search, 500);
-
-  toggleCart() {
-    this.appService.setCartIsOpen(!this.appService.getCartIsOpen());
-  }
 
   constructor() {
     this.router.events.subscribe((event) => {
@@ -80,15 +45,6 @@ export class NavbarComponent {
           this.showNavbar = true;
         }
       }
-
-      window.addEventListener('click', (e: Event) => {
-        const searchbar = document.querySelector('.searchbar');
-        const target = e.target as Node;
-        //console.log(target);
-        if (searchbar && !searchbar?.contains(target)) {
-          this.appService.setShowResults(false);
-        }
-      });
     });
 
     afterNextRender(() => {

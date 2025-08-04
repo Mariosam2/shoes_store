@@ -1,4 +1,4 @@
-@if(loading){
+@if(singleProductLoading()){
 <div class="loader fixed left-0 top-0 bottom-0 w-full z-40 bg-ms-white">
   <lottie-player
     class="max-w-[300px] mx-auto"
@@ -10,14 +10,12 @@
 </div>
 } @else {
 <section class="product pt-32">
-  @if(product && appService.getIsShopUrlReady()){
-
   <div class="max-w-5xl grid grid-cols-2 mx-auto gap-x-6 relative pt-4">
     <div class="previous-route absolute top-0 translate-y-[-100%] left-0">
       <a
         class="flex items-center gap-x-2 py-3"
-        [routerLink]="['/' + appService.getShopPath()]"
-        [queryParams]="appService.getShopQueryParams()"
+        [routerLink]="['/' + shopService.SHOP_PATH]"
+        [queryParams]="shopQueryParams()"
         ><svg
           class="size-6"
           xmlns="http://www.w3.org/2000/svg"
@@ -36,9 +34,8 @@
       </a>
     </div>
     <div class="product-img-contaier col-span-1 flex">
-      @if(product.medias.length > 1){
       <div class="thumbnails flex flex-col">
-        @for(media of product.medias; let index = $index; track index){
+        @for(media of activeProduct().medias; let index = $index; track index){
         <div
           (mouseleave)="resetCurrentImage($event)"
           (mouseover)="setCurrentImage($event)"
@@ -55,26 +52,23 @@
         </div>
         }
       </div>
-
-      }
       <div class="product-img">
         <img
           class="max-w-full h-auto object-cover"
-          [src]="currentImage ? currentImage : product.medias[0].path"
+          [src]="currentImage ? currentImage : activeProduct().medias![0].path"
           alt=""
         />
       </div>
     </div>
     <div class="product-content flex flex-col col-span-1 p-4 bg-ms-off-white">
-      <h1 class="text-3xl">{{ product.title }}</h1>
-      <div class="vendor py-4">{{ product.vendor.name }}</div>
-      <p class="text-ms-muted">{{ product.description }}</p>
+      <h1 class="text-3xl">{{ activeProduct().title }}</h1>
+      <div class="vendor py-4">{{ activeProduct().vendor?.name }}</div>
+      <p class="text-ms-muted">{{ activeProduct().description }}</p>
       <span class="price font-mono font-semibold text-lg block pt-4"
-        >{{ product.price }}&euro;
+        >{{ activeProduct().price }}&euro;
       </span>
-
       <div
-        (click)="addToCart(product)"
+        (click)="addToCart(activeProduct()!)"
         class="add-to-cart cursor-pointer relative w-fit mt-auto"
       >
         <span
@@ -102,8 +96,6 @@
       </div>
     </div>
   </div>
-
-  }
 </section>
 
 }

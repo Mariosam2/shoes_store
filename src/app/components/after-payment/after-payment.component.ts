@@ -1,6 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
-import AppService from '../../app.service';
+import AppService from '../../services/app.service';
+import { ShopService } from '../../services/shop.service';
 
 @Component({
   selector: 'app-after-payment',
@@ -10,9 +11,11 @@ import AppService from '../../app.service';
   styleUrl: './after-payment.component.css',
 })
 export class AfterPaymentComponent {
-  router = new Router();
-  appService = inject(AppService);
+  shopService = inject(ShopService);
   activatedRoute = inject(ActivatedRoute);
+  router = new Router();
+
+  shopQueryParams = this.shopService.shopQueryParams;
   isSuccessfull: boolean;
   error: string | null;
 
@@ -26,8 +29,5 @@ export class AfterPaymentComponent {
       this.error = error;
       this.isSuccessfull = false;
     }
-  }
-  ngOnInit() {
-    console.log(this.activatedRoute);
   }
 }

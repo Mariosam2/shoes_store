@@ -1,28 +1,12 @@
-import { Component, ElementRef, inject, signal } from '@angular/core';
+import { Component, effect, ElementRef, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {
-  Category,
-  HttpResponse,
-  isAxiosError,
-  Product,
-  Vendor,
-} from '../../types';
-import axios from 'axios';
-import AppService from '../../app.service';
+import { Category, Filters, Vendor } from '../../shared/types';
+import AppService from '../../services/app.service';
 import { Router } from '@angular/router';
-
-interface VendorResponse extends HttpResponse {
-  vendors: Vendor[];
-}
-interface CategoryResponse extends HttpResponse {
-  categories: Category[];
-}
-
-interface FilterResponse {
-  success: boolean;
-  filteredResults: Product[];
-}
+import { PaginationService } from '../../services/pagination.service';
+import { FiltersService } from '../../services/filters.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-filters',
@@ -31,100 +15,74 @@ interface FilterResponse {
   styleUrl: './filters.component.css',
 })
 export class FiltersComponent {
-  readonly panelOpenState = signal(false);
   elementRef = inject(ElementRef);
-  router = new Router();
+  apiService = inject(ApiService);
   appService = inject(AppService);
-  vendorFilters: string[] = [];
-  vendors: Vendor[] = [];
-  categoryFilters: string[] = [];
-  categories: Category[] = [];
-  priceFilter: number = 0;
+  filtersService = inject(FiltersService);
+  paginationService = inject(PaginationService);
+  router = new Router();
 
-  filterProducts = async () => {
-    try {
-      this.appService.setShopLoading(true);
-      const response = await axios.get<FilterResponse>(
-        this.appService.apiUrl +
-          `/filter?price=${this.priceFilter}&vendors=${this.vendorFilters}&categories=${this.categoryFilters}`
-      );
-      this.appService.setProducts(response.data.filteredResults);
-      setTimeout(() => {
-        this.appService.setShopLoading(false);
-      }, 1000);
-    } catch (err) {
-      setTimeout(() => {
-        this.appService.setShopLoading(false);
-      }, 1000);
-      if (isAxiosError(err)) {
-        this.router.navigateByUrl(
-          `/error?status="${err.status}"&message="${err.message}"`
-        );
-      } else {
-        this.router.navigateByUrl(`/error?message="${(err as Error).message}"`);
-      }
-    }
-  };
+  currentPage = this.paginationService.currentPage;
+  pages = this.paginationService.pages;
+  vendors = this.filtersService.vendors;
+  categories = this.filtersService.categories;
+  categoryFilters = this.filtersService.categoryFilters;
+  vendorFilters = this.filtersService.vendorFilters;
+  priceFilter = this.filtersService.priceFilter;
+  isFiltering = this.filtersService.isFiltering;
+
+  openPanel = signal<boolean>(false);
 
   changeVendors = async () => {
     const checkedCheckboxes = this.elementRef.nativeElement.querySelectorAll(
       '.vendor input[type="checkbox"]:checked'
     );
-    this.vendorFilters = Array.from(
-      checkedCheckboxes,
-      (checkbox: HTMLInputElement) => checkbox.value
-    );
 
-    await this.filterProducts();
+    this.vendorFilters.set(
+      Array.from(
+        checkedCheckboxes,
+        (checkbox: HTMLInputElement) => checkbox.value
+      )
+    );
   };
 
   changeCategories = async () => {
     const checkedCheckboxes = this.elementRef.nativeElement.querySelectorAll(
       '.category input[type="checkbox"]:checked'
     );
-    this.categoryFilters = Array.from(
-      checkedCheckboxes,
-      (checkbox: HTMLInputElement) => checkbox.value
+
+    this.categoryFilters.set(
+      Array.from(
+        checkedCheckboxes,
+        (checkbox: HTMLInputElement) => checkbox.value
+      )
     );
-
-    await this.filterProducts();
   };
 
-  getCategories = async () => {
-    try {
-      const response = await axios.get<CategoryResponse>(
-        this.appService.apiUrl + '/categories'
-      );
-      this.categories = response.data.categories;
-    } catch (err) {
-      if (isAxiosError(err)) {
-        this.router.navigateByUrl(
-          `/error?status="${err.status}"&message="${err.message}"`
-        );
-      } else {
-        this.router.navigateByUrl(`/error?message="${(err as Error).message}"`);
-      }
-    }
+  changePrice = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    this.priceFilter.set(Number(target.value));
   };
-  getVendors = async () => {
-    try {
-      const response = await axios.get<VendorResponse>(
-        this.appService.apiUrl + '/vendors'
-      );
-      this.vendors = response.data.vendors;
-    } catch (err) {
-      if (isAxiosError(err)) {
-        this.router.navigateByUrl(
-          `/error?status="${err.status}"&message="${err.message}"`
-        );
-      } else {
-        this.router.navigateByUrl(`/error?message="${(err as Error).message}"`);
+
+  constructor() {
+    effect(() => {
+      const vendorFilters = this.vendorFilters();
+      const categoryFilters = this.categoryFilters();
+      const priceFilter = this.priceFilter();
+
+      if (
+        vendorFilters.length > 0 ||
+        categoryFilters.length > 0 ||
+        priceFilter > 0
+      ) {
+        this.isFiltering.set(true);
+        this.currentPage.set(1);
       }
-    }
-  };
+    });
+  }
 
   async ngOnInit() {
-    await this.getVendors();
-    await this.getCategories();
+    await this.apiService.getCategories();
+    await this.apiService.getVendors();
   }
 }

@@ -12,7 +12,7 @@ gsap.registerPlugin(DrawSVGPlugin);
   styleUrl: './card.component.css',
 })
 export class CardComponent {
-  @Input() step: number = 1;
+  @Input() currentPage: number = 1;
   tl = gsap.timeline();
   cardData = [
     {
@@ -39,17 +39,17 @@ export class CardComponent {
   ];
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['step']) {
-      const step = changes['step'].currentValue;
-      if (step == 1) {
+    if (changes['currentPage']) {
+      const currentPage = changes['currentPage'].currentValue;
+      if (currentPage == 1) {
         gsap.to('.top-square', { duration: 0.25, bottom: '30%' });
         gsap.to('.bottom-square', { duration: 0.25, bottom: '25%' });
       }
-      if (step == 2) {
+      if (currentPage == 2) {
         gsap.to('.top-square', { duration: 0.25, bottom: '25%' });
         gsap.to('.bottom-square', { duration: 0.25, bottom: '25%' });
       }
-      if (step == 3) {
+      if (currentPage == 3) {
         gsap.to('.top-square', { duration: 0.25, bottom: '25%' });
         gsap.to('.bottom-square', { duration: 0.25, bottom: '30%' });
       }
@@ -60,7 +60,7 @@ export class CardComponent {
           '.card',
           {
             opacity: 0,
-            y: step === 3 ? 20 : -20,
+            y: currentPage === 3 ? 20 : -20,
             boxShadow: '0px 0px 0px 0px #110c2e26',
           },
           {

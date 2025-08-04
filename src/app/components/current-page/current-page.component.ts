@@ -1,7 +1,7 @@
 import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import * as three from 'three';
 import { gsap } from 'gsap';
-import AppService from '../../app.service';
+import AppService from '../../services/app.service';
 @Component({
   selector: 'app-current-page',
   imports: [],
@@ -15,11 +15,9 @@ export class CurrentPageComponent {
   appService = inject(AppService);
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['currentPage']) {
-      const step = changes['currentPage'].currentValue;
-      this.appService.setStep(step);
+    if (changes['currentPage'] || changes['model']) {
       if (this.model) {
-        if (step == 1) {
+        if (this.currentPage == 1) {
           gsap.to(this.model.rotation, {
             y: Math.PI / 2,
             x: 0,
@@ -28,7 +26,7 @@ export class CurrentPageComponent {
             ease: 'power2.out',
           });
         }
-        if (step == 2) {
+        if (this.currentPage == 2) {
           gsap.to(this.model.rotation, {
             y: Math.PI / 1,
             x: Math.PI / 2,
@@ -38,7 +36,7 @@ export class CurrentPageComponent {
           });
         }
 
-        if (step == 3) {
+        if (this.currentPage == 3) {
           gsap.to(this.model.rotation, {
             y: Math.PI / 2,
             x: 0,

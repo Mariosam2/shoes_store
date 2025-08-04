@@ -15,8 +15,8 @@
       <div class="previous-route ms-6">
         <a
           class="flex items-center gap-x-2 py-3"
-          [routerLink]="['/' + appService.getShopPath()]"
-          [queryParams]="appService.getShopQueryParams()"
+          [routerLink]="['/' + shopService.SHOP_PATH]"
+          [queryParams]="shopQueryParams()"
           ><svg
             class="size-6"
             xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@
           <input
             class="border focus:border-[#0570de]"
             [class]="
-              emailError !== null ? ' border-red-500' : 'border-[#e6e6e6]'
+              emailError() !== null ? ' border-red-500' : 'border-[#e6e6e6]'
             "
             [(ngModel)]="email"
             (input)="resetEmailError()"
@@ -63,7 +63,9 @@
             name="email"
             id="email"
           />
-          <span class="email-error text-red-500 text-sm">{{ emailError }}</span>
+          <span class="email-error text-red-500 text-sm">{{
+            emailError()
+          }}</span>
         </div>
         <div id="address-element"></div>
       </div>
@@ -75,16 +77,16 @@
   >
     <div class="checkout max-w-xl mx-auto pt-12">
       <h2 class="text-2xl pb-3">Order details:</h2>
-      @for(item of items; track item.productUuid){
-      <div class="order-item flex items-center py-3">
+      @for(product of payingProducts(); track product.productUuid){
+      <div class="order-product flex items-center py-3">
         <img
           class="max-w-[120px] aspect-video object-cover"
-          [src]="item.img"
+          [src]="product.img"
           alt=""
         />
         <div class="content p-3">
-          <h4>{{ item.title }}</h4>
-          <span class="font-mono text-sm">{{ item.price }}&euro;</span>
+          <h4>{{ product.title }}</h4>
+          <span class="font-mono text-sm">{{ product.price }}&euro;</span>
         </div>
         <div class="quantity flex items-center p-3 ms-auto">
           <svg
@@ -102,17 +104,19 @@
             />
           </svg>
           <span class="inline-block font-mono text-lg text-ms-white px-2">{{
-            item.quantity
+            product.quantity
           }}</span>
         </div>
       </div>
-      }
-      <div class="total font-mono w-fit ms-auto pe-3 py-4">
-        Total:
-        {{ total }}
+      } @if(total() > 0){
+      <div class="total() font-mono w-fit ms-auto pe-3 py-4">
+        total:
+        {{ total() }}
       </div>
+
+      }
       <div
-        (click)="payOrder()"
+        (click)="paymentService.payOrder(email)"
         class="pay-btn cursor-pointer relative w-fit mt-6"
         [class]="submitting ? 'disable' : ''"
       >

@@ -1,128 +1,61 @@
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  effect,
   ElementRef,
   inject,
 } from '@angular/core';
-import axios from 'axios';
-import { HttpResponse, isAxiosError, Product } from '../../types';
 import { ProductCardComponent } from '../product-card/product-card.component';
-import AppService from '../../app.service';
-import { filter, pairwise } from 'rxjs';
-import { ActivationEnd, Params, Router } from '@angular/router';
 import { FiltersComponent } from '../filters/filters.component';
-
-interface ProductsResponse extends HttpResponse {
-  products: Product[];
-  pages: number;
-}
+import { ApiService } from '../../services/api.service';
+import { PaginationService } from '../../services/pagination.service';
+import { ShopService } from '../../services/shop.service';
+import { Filters, Product } from '../../shared/types';
+import { FiltersService } from '../../services/filters.service';
+import { ProductCardSkeletonComponent } from '../product-card-skeleton/product-card-skeleton.component';
 @Component({
   selector: 'app-shop',
-  imports: [ProductCardComponent, FiltersComponent],
+  imports: [
+    ProductCardComponent,
+    FiltersComponent,
+    ProductCardSkeletonComponent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css',
 })
 export class ShopComponent {
   elementRef = inject(ElementRef);
-  pages: number | null = null;
-  router = new Router();
-  loadingMore: boolean;
-  subscribed: boolean = false;
-  currentPage: number = 1;
-  appService = inject(AppService);
-  loadMore = async () => {
-    this.loadingMore = true;
-    console.log(this.pages, this.currentPage);
-    if (this.pages && this.currentPage < this.pages) {
-      this.currentPage += 1;
-      await this.getProducts(this.currentPage, true);
-      const skeleton = document.querySelector('.skeleton');
-      skeleton?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    }
-  };
-  getProducts = async (page: number, loadMore: boolean = false) => {
-    try {
-      const response = await axios.get<ProductsResponse>(
-        this.appService.apiUrl + `/products?page=${page}`
-      );
+  apiService = inject(ApiService);
+  shopService = inject(ShopService);
+  paginationService = inject(PaginationService);
+  filtersService = inject(FiltersService);
 
-      //change to append products or smth to keep tack of the previous pages
-      if (loadMore) {
-        setTimeout(() => {
-          this.loadingMore = false;
-          this.appService.addProducts(response.data.products);
-        }, 1000);
-      } else {
-        this.appService.setProducts(response.data.products);
-      }
-      if (!this.pages) {
-        this.pages = response.data.pages;
-      }
-      setTimeout(() => {
-        this.appService.setShopLoading(false);
-      }, 1000);
-    } catch (err) {
-      setTimeout(() => {
-        this.appService.setShopLoading(false);
-      }, 1000);
+  categoryFilters = this.filtersService.categoryFilters;
+  vendorFilters = this.filtersService.vendorFilters;
+  priceFilter = this.filtersService.priceFilter;
+  isFiltering = this.filtersService.isFiltering;
+  currentPage = this.paginationService.currentPage;
+  pages = this.paginationService.pages;
+  shopLoading = this.shopService.shopLoading;
+  dummyCards = new Array(4).fill(0);
 
-      if (isAxiosError(err)) {
-        this.router.navigateByUrl(
-          `/error?status="${err.status}"&message="${err.message}"`
+  constructor() {
+    effect(async () => {
+      const currentPage = this.currentPage();
+      const isFiltering = this.isFiltering();
+      if (isFiltering) {
+        this.apiService.getOrFilterProducts(
+          currentPage,
+          new Filters(
+            this.vendorFilters(),
+            this.categoryFilters(),
+            this.priceFilter()
+          )
         );
       } else {
-        this.router.navigateByUrl(`/error?message="${(err as Error).message}"`);
+        await this.apiService.getOrFilterProducts(currentPage);
       }
-    }
-  };
-
-  isObjEmpty(obj: Params) {
-    for (const prop in obj) {
-      if (Object.hasOwn(obj, prop)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  constructor(router: Router) {
-    this.appService.setShopLoading(true);
-    this.loadingMore = false;
-    if (!this.appService.getIsSubscribedToShopRouteEvents()) {
-      router.events
-        .pipe(
-          filter((e) => e instanceof ActivationEnd),
-          pairwise()
-        )
-        .subscribe((events: ActivationEnd[]) => {
-          const snapshot = events[0].snapshot;
-          const path = snapshot.url[0].path;
-          if (path === 'shop') {
-            const queryParams = snapshot.queryParams;
-
-            this.appService.setShopQueryParams(
-              this.isObjEmpty(queryParams) ? null : queryParams
-            );
-
-            this.appService.setIsShopUrlReady(true);
-
-            localStorage.setItem(
-              'shopQueryParams',
-              JSON.stringify(queryParams)
-            );
-
-            //console.log(path, queryParams);
-            //console.log(localStorage);
-
-            this.appService.setIsSubscribedToShopRouteEvents(true);
-          }
-        });
-    }
-  }
-
-  async ngOnInit() {
-    await this.getProducts(this.currentPage);
+    });
   }
 }

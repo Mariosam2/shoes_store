@@ -1,6 +1,6 @@
 <section
   class="loader fixed grid place-items-center"
-  [class]="isLoading ? 'ms-show' : 'ms-hidden'"
+  [class]="appService.appLoading() ? 'ms-show' : 'ms-hidden'"
 >
   <div class="loader-el w-sm grid place-items-center">
     <div class="counter text-3xl font-semibold pb-2 font-mono"></div>

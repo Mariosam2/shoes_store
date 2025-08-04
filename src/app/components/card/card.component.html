@@ -8,9 +8,9 @@
   <div
     class="card absolute"
     [class]="
-      step === 1
+      currentPage === 1
         ? 'top-0 left-0'
-        : step === 2
+        : currentPage === 2
         ? 'top-3 right-12'
         : 'bottom-12 left-0'
     "
@@ -19,11 +19,11 @@
       class="content max-w-lg border relative border-ms-darker p-6 bg-ms-off-white z-20"
     >
       <h3 class="text-5xl mb-3 text-ms-darker">
-        {{ cardData[step - 1].title }}
+        {{ cardData[currentPage - 1].title }}
       </h3>
 
       <p class="lowercase font-light text-base text-ms-dark p-2">
-        {{ cardData[step - 1].content }}
+        {{ cardData[currentPage - 1].content }}
       </p>
       <div class="content-bottom flex items-center mt-6">
         <a
@@ -76,15 +76,15 @@
     <div
       class="link absolute z-10"
       [class]="
-        step === 1
+        currentPage === 1
           ? 'bottom-[-120%] left-[50%]'
-          : step === 2
+          : currentPage === 2
           ? 'right-[90%] top-[-80%]'
           : 'top-[-120%] left-[-10%]'
       "
     >
       <svg
-        [class]="step === 1 ? 'block' : 'hidden'"
+        [class]="currentPage === 1 ? 'block' : 'hidden'"
         id="link"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -113,7 +113,7 @@
         />
       </svg>
       <svg
-        [class]="step === 2 ? 'block' : 'hidden'"
+        [class]="currentPage === 2 ? 'block' : 'hidden'"
         id="link"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -141,7 +141,7 @@
         />
       </svg>
       <svg
-        [class]="step === 3 ? 'block' : 'hidden'"
+        [class]="currentPage === 3 ? 'block' : 'hidden'"
         id="link"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"

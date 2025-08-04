@@ -1,9 +1,9 @@
 <div
   class="cart fixed top-48 min-w-sm h-max bg-ms-off-white p-4 z-30 border border-ms-darker"
-  [class]="this.appService.getCartIsOpen() ? 'ms-show' : 'ms-hidden'"
+  [class]="cartIsOpen() ? 'ms-show' : 'ms-hidden'"
 >
   <svg
-    (click)="closeCart()"
+    (click)="cartService.closeCart()"
     class="size-5 absolute right-1.5 top-1.5 cursor-pointer"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -18,7 +18,7 @@
     />
   </svg>
 
-  <div class="cart-heading flex items-center">
+  <div class="cart-heading flex products-center">
     <svg
       class="cart-icon size-7 me-2"
       xmlns="http://www.w3.org/2000/svg"
@@ -35,22 +35,23 @@
     </svg>
     <h2 class="text-xl">Your Cart</h2>
   </div>
-  @if(cartItems.length> 0 && stringifiedCartItems){
-  <div class="cart-items flex flex-col gap-y-2 pt-5">
-    @for(item of cartItems; track item.productUuid){ @if(item.quantity> 0){
-    <div class="cart-item flex items-center justify-between">
+  @if(cartProducts.length> 0 && stringifiedCartProducts){
+  <div class="cart-products flex flex-col gap-y-2 pt-5">
+    @for(product of cartProducts; track product.productUuid){
+    @if(product.quantity> 0){
+    <div class="cart-product flex items-center justify-between">
       <img
         class="max-w-[80px] aspect-video object-cover"
-        [src]="item.img"
+        [src]="product.img"
         alt=""
       />
       <div class="content p-3">
-        <h4>{{ item.title }}</h4>
-        <span class="font-mono text-sm">{{ item.price }}&euro;</span>
+        <h4>{{ product.title }}</h4>
+        <span class="font-mono text-sm">{{ product.price }}&euro;</span>
       </div>
       <div class="quantity flex items-center p-3">
         <svg
-          (click)="appService.addQuantityToCartItem(item.productUuid)"
+          (click)="cartService.addQuantityToCartProduct(product.productUuid)"
           class="plus size-5 cursor-pointer"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -65,10 +66,12 @@
           />
         </svg>
         <span class="inline-block font-mono text-sm text-ms-dark px-2">{{
-          item.quantity
+          product.quantity
         }}</span>
         <svg
-          (click)="appService.removeQuantityFromCartItem(item.productUuid)"
+          (click)="
+            cartService.removeQuantityFromCartProduct(product.productUuid)
+          "
           class="minus size-5 cursor-pointer"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -83,7 +86,7 @@
     } }
   </div>
   <div class="checkout pt-4 mt-4 border-t border-ms-darker flex items-center">
-    <a [routerLink]="['/checkout', { items: stringifiedCartItems }]">
+    <a [routerLink]="['/checkout', { products: stringifiedCartProducts }]">
       <div class="checkout-btn cursor-pointer relative w-fit">
         <span
           class="text text-sm tracking-widest inline-block relative z-10 px-4 py-3 w-fit font-bold"

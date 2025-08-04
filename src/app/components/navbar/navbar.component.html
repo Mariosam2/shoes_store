@@ -11,70 +11,9 @@
       alt="logo"
     />
   </div>
-  @if(!isHomeRoute){
-  <div class="searchbar ms-4 relative">
-    <input
-      (input)="debouncedSearch()"
-      [(ngModel)]="query"
-      placeholder="Search"
-      id="search"
-      class="input"
-      name="search"
-      type="text"
-      autocomplete="off"
-    />
 
-    <label class="search-label" for="search">
-      <svg class="search-icon" viewBox="0 0 512 512">
-        <path
-          d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-        ></path>
-      </svg>
-    </label>
-    @if(query.trim() !== "" && appService.getShowResults()){
-    <div
-      class="search-results absolute left-0 top-[100%] w-3/4 bg-ms-off-white p-3"
-    >
-      @if(searchProducts.length >0){
-      <div class="search-products flex flex-col">
-        @for (searchProduct of searchProducts; track $index) {
-        <a
-          class="block hover:bg-ms-muted"
-          [routerLink]="[`/product/${searchProduct.productUuid}`]"
-        >
-          <div class="search-product flex p-2 border-b border-ms-muted">
-            <img
-              class="w-[40px] object-cover"
-              [src]="searchProduct.image"
-              alt=""
-            />
-            <div class="content p-1 ms-1 relative">
-              <div class="title text-sm font-semibold">
-                {{ searchProduct.title }}
-              </div>
-              <span class="price font-mono text-sm">{{
-                searchProduct.price
-              }}</span>
-              <div
-                class="category absolute right-0 bottom-0 text-sm text-ms-dark pe-1"
-              >
-                {{ searchProduct.category }}
-              </div>
-            </div>
-          </div>
-        </a>
+  <app-searchbar [isHomeRoute]="isHomeRoute" />
 
-        }
-      </div>
-
-      } @else {
-      <div class="no-results text-sm">No results found for this search...</div>
-      }
-    </div>
-    }
-  </div>
-
-  }
   <div class="right-nav ms-auto relative flex items-center">
     <ul class="nav-links flex items-center gap-x-2 w-fit">
       @for (link of links; let idx = $index; track idx){
@@ -91,11 +30,14 @@
         </a>
       </li>
       }
-      <li class="cart cursor-pointer relative p-3" (click)="toggleCart()">
-        @if(appService.getCartItems().length> 0){
+      <li
+        class="cart cursor-pointer relative p-3"
+        (click)="cartService.toggleCart()"
+      >
+        @if(cartService.getCartProducts().length> 0){
         <span
           class="text-sm flex items-center justify-center absolute translate-y-[-60%] top-3 right-3 w-[18px] h-[18px] p-1 rounded-full bg-ms-orange text-ms-white"
-          >{{ appService.getCartItems().length }}</span
+          >{{ cartService.getCartProducts().length }}</span
         >
 
         }

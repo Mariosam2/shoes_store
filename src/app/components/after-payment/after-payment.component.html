@@ -15,8 +15,8 @@
     >
       <a
         class="flex items-center gap-x-2"
-        [routerLink]="['/' + appService.getShopPath()]"
-        [queryParams]="appService.getShopQueryParams()"
+        [routerLink]="['/' + shopService.SHOP_PATH]"
+        [queryParams]="shopQueryParams()"
         ><svg
           class="size-6"
           xmlns="http://www.w3.org/2000/svg"
@@ -50,8 +50,8 @@
     >
       <a
         class="flex items-center gap-x-2"
-        [routerLink]="['/' + appService.getShopPath()]"
-        [queryParams]="appService.getShopQueryParams()"
+        [routerLink]="['/' + shopService.SHOP_PATH]"
+        [queryParams]="shopQueryParams()"
         ><svg
           class="size-6"
           xmlns="http://www.w3.org/2000/svg"

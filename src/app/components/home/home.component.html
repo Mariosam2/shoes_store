@@ -1,6 +1,6 @@
 <section class="home">
   <h1 class="bg-heading uppercase cursor-default">tokyo drift 2099</h1>
-  @if(!appService.getIsLoading()){
+  @if(!appLoading){
 
   <div class="line border-e border-b border-ms-darker fixed">
     <app-current-page
@@ -16,6 +16,6 @@
     <div class="navigation"></div>
   </div>
 
-  <app-card [step]="appService.getStep()" />
+  <app-card [currentPage]="currentPage" />
   }
 </section>

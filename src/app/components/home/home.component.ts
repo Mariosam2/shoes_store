@@ -9,7 +9,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as three from 'three';
 import { CurrentPageComponent } from '../current-page/current-page.component';
-import AppService from '../../app.service';
+import AppService from '../../services/app.service';
 import { CardComponent } from '../card/card.component';
 
 @Component({
@@ -20,12 +20,16 @@ import { CardComponent } from '../card/card.component';
 })
 export class HomeComponent {
   appService = inject(AppService);
+  elementRef = inject(ElementRef);
+
+  appLoading = this.appService.appLoading();
+
   maxPages: number = 3;
   currentPage: number = 1;
-  elementRef = inject(ElementRef);
   scene: three.Scene = new three.Scene();
   light = new three.AmbientLight('#ffffff', 2);
   directionalLight = new three.DirectionalLight('#ffffff', 1);
+
   getCanvas = () => {
     const canvas = document.createElement('canvas');
     canvas.setAttribute('id', 'canvas');
@@ -92,7 +96,7 @@ export class HomeComponent {
     });
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.bgHeading = this.elementRef.nativeElement.querySelector('.bg-heading');
     this.bgHeading?.scrollTo(0, 0);
     const home = this.elementRef.nativeElement.querySelector('section.home');

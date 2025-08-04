@@ -1,7 +1,7 @@
 import { Component, inject, Input, SimpleChanges } from '@angular/core';
-import AppService from '../../app.service';
-import { CartItem } from '../../types';
 import { RouterLink } from '@angular/router';
+import { CartService } from '../../services/cart.service';
+import { CartProduct } from '../../shared/types';
 
 @Component({
   selector: 'app-cart',
@@ -10,25 +10,22 @@ import { RouterLink } from '@angular/router';
   styleUrl: './cart.component.css',
 })
 export class CartComponent {
-  appService = inject(AppService);
+  cartService = inject(CartService);
   total: number = 0;
-  @Input() cartItems: CartItem[] = [];
-  stringifiedCartItems: string | null = null;
-
-  closeCart() {
-    this.appService.setCartIsOpen(false);
-  }
+  stringifiedCartProducts: string | null = null;
+  @Input() cartProducts = this.cartService.getCartProducts();
+  cartIsOpen = this.cartService.cartIsOpen;
 
   clearCart() {
-    this.appService.setCartItems([]);
-    this.appService.setCartIsOpen(false);
+    this.cartService.setCartProducts([]);
+    this.cartService.closeCart();
   }
 
-  calcTotal(cartItems: CartItem[]): string {
+  calcTotal(cartProducts: CartProduct[]): string {
     let total = 0;
-    for (let i = 0; i < cartItems.length; i++) {
-      const cartItem = cartItems[i];
-      const subtotal = cartItem.price * cartItem.quantity;
+    for (let i = 0; i < cartProducts.length; i++) {
+      const cartProduct = cartProducts[i];
+      const subtotal = cartProduct.price * cartProduct.quantity;
       total += subtotal;
     }
 
@@ -36,11 +33,14 @@ export class CartComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    //console.log(changes);
-    if (changes['cartItems'] && changes['cartItems'].currentValue.length > 0) {
-      const cartItems = changes['cartItems'].currentValue;
-      this.stringifiedCartItems = JSON.stringify(cartItems);
-      this.total = Number(parseFloat(this.calcTotal(cartItems)).toFixed(2));
+    if (
+      changes['cartProducts'] &&
+      changes['cartProducts'].currentValue.length > 0
+    ) {
+      const cartProducts = changes['cartProducts'].currentValue;
+      this.stringifiedCartProducts = JSON.stringify(cartProducts);
+      //console.log(this.stringifiedCartProducts);
+      this.total = Number(parseFloat(this.calcTotal(cartProducts)).toFixed(2));
     }
   }
 }

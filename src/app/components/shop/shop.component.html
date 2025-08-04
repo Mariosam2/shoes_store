@@ -2,62 +2,36 @@
   <app-filters />
   <div
     class="products-container relative ms-auto px-6"
-    [class]="appService.getShopLoading()   ? `overflow-hidden` : ''"
+    [class]="shopLoading() ? 'overflow-hidden' : ''"
   >
-    @if(appService.getShopLoading()){
-    <div class="skeleton grid grid-cols-4 gap-x-3 gap-y-3 pt-24 px-8">
-      <div class="skeleton-card h-[580px]">
-        <div class="skeleton-img w-full aspect-square"></div>
-        <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-      </div>
-      <div class="skeleton-card h-[580px]">
-        <div class="skeleton-img w-full aspect-square"></div>
-        <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-      </div>
-      <div class="skeleton-card h-[580px]">
-        <div class="skeleton-img w-full aspect-square"></div>
-        <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-      </div>
-      <div class="skeleton-card h-[580px]">
-        <div class="skeleton-img w-full aspect-square"></div>
-        <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-      </div>
-    </div>
-    } @else {
     <div class="products grid grid-cols-4 gap-x-3 gap-y-3 pb-24 relative">
-      @for(product of appService.getProducts(); track product.productUuid){
+      @if( this.shopService.getProductsUntilPage(currentPage()).length === 0 &&
+      this.shopLoading()){ @for(item of dummyCards; track $index){
+
+      <app-product-card-skeleton />
+
+      } } @else if( this.shopService.getProductsUntilPage(currentPage()).length
+      === 0){
+      <div
+        class="no-results grid place-items-center text-ms-darker text-center col-span-4 fixed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"
+      >
+        <img class="size-14" src="./no-results.png" alt="" />
+        <span class="block my-3">No results found</span>
+      </div>
+      } @else { @for(product of
+      this.shopService.getProductsUntilPage(currentPage()); track $index){
 
       <app-product-card [product]="product" />
-      } @if(loadingMore){
-      <div class="skeleton col-span-4 grid grid-cols-4 gap-x-3 gap-y-3">
-        <div class="skeleton-card h-[580px]">
-          <div class="skeleton-img w-full aspect-square"></div>
-          <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-        </div>
-        <div class="skeleton-card h-[580px]">
-          <div class="skeleton-img w-full aspect-square"></div>
-          <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-        </div>
-        <div class="skeleton-card h-[580px]">
-          <div class="skeleton-img w-full aspect-square"></div>
-          <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-        </div>
-        <div class="skeleton-card h-[580px]">
-          <div class="skeleton-img w-full aspect-square"></div>
-          <div class="skeleton-content w-full p-12 bg-ms-off-white"></div>
-        </div>
-      </div>
-      }
+      } }
     </div>
-
-    }
   </div>
 </section>
-<!-- @if(pages && currentPage < pages){
+
+@if(pages() > 1 && currentPage() < pages()){
 <div class="load-more-container ms-auto">
   <div class="load-more w-fit cursor-pointer sticky bottom-0 left-0 mx-auto">
     <button
-      (click)="loadMore()"
+      (click)="paginationService.incrementCurrentPage()"
       class="load-more-btn cursor-pointer font-semibold bg-ms-off-white block mx-auto border border-ms-darker text-ms-darker px-4 py-3"
     >
       Load more
@@ -65,4 +39,4 @@
   </div>
 </div>
 
-} -->
+}
