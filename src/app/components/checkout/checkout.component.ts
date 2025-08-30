@@ -18,9 +18,9 @@ export class CheckoutComponent {
   shopService = inject(ShopService);
   paymentService = inject(PaymentService);
 
-  paymentLoading: boolean = true;
-  addressLoading: boolean = true;
-  submitting: boolean = false;
+  paymentLoading = this.paymentService.paymentLoading;
+  addressLoading = this.paymentService.addressLoading;
+  processingPayment = this.paymentService.processingPayment;
 
   payingProducts = this.paymentService.payingProducts;
   shopQueryParams = this.shopService.shopQueryParams;
@@ -32,7 +32,11 @@ export class CheckoutComponent {
     this.paymentService.emailError.set('');
   };
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    this.paymentLoading.set(true);
+    this.addressLoading.set(true);
+    await this.paymentService.loadStripeElements();
+  }
 
   constructor(route: ActivatedRoute) {
     this.paymentService.payingProducts.set(

@@ -25,7 +25,7 @@ export class LoaderComponent {
           },
           {
             innerText: 100 + '%',
-            duration: 2,
+            duration: 1,
             snap: {
               innerText: 1,
             },
@@ -38,7 +38,7 @@ export class LoaderComponent {
             transformOrigin: 'left',
           },
           {
-            duration: 2,
+            duration: 1,
             scaleX: 1,
           }
         );

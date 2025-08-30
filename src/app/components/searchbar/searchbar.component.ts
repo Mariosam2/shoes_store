@@ -2,13 +2,11 @@ import { Component, effect, inject, input } from '@angular/core';
 import { SearchService } from '../../services/search.service';
 import { debounce } from 'lodash';
 import { ApiService } from '../../services/api.service';
-import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ShopService } from '../../services/shop.service';
 
 @Component({
   selector: 'app-searchbar',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './searchbar.component.html',
   styleUrl: './searchbar.component.css',
 })

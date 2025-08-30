@@ -28,7 +28,7 @@ export class ApiService {
 
   apiUrl: string = isDevMode() ? environment.apiURL : prodEnvironment.apiURL;
 
-  delayLoadingFinish(loading: WritableSignal<boolean>) {
+  async delayLoadingFinish(loading: WritableSignal<boolean>) {
     setTimeout(() => {
       loading.set(false);
     }, 1000);
@@ -86,10 +86,10 @@ export class ApiService {
       this.shopService.singleProductLoading;
       const singleProductResponse = await this.GET_SINGLE_PRODUCT(productUUID);
       this.shopService.activeProduct.set(singleProductResponse.product);
-      this.delayLoadingFinish(this.shopService.singleProductLoading);
+      await this.delayLoadingFinish(this.shopService.singleProductLoading);
       this.router.navigateByUrl(`/product/${productUUID}`);
     } catch (error) {
-      this.delayLoadingFinish(this.shopService.singleProductLoading);
+      await this.delayLoadingFinish(this.shopService.singleProductLoading);
       if (isAxiosError(error)) {
         this.router.navigateByUrl(
           `/error?status="${error.status}"&message="${error.message}"`
@@ -113,32 +113,24 @@ export class ApiService {
       else this.shopService.setProducts(productsResponse.products);
 
       this.paginationService.pages.set(productsResponse.pages);
-      this.delayLoadingFinish(this.shopService.shopLoading);
+      await this.delayLoadingFinish(this.shopService.shopLoading);
     } catch (error) {
-      this.delayLoadingFinish(this.shopService.shopLoading);
-      if (isAxiosError(error)) {
-        this.router.navigateByUrl(
-          `/error?status="${error.status}"&message="${error.message}"`
-        );
-      } else {
-        this.router.navigateByUrl(
-          `/error?message="${(error as Error).message}"`
-        );
-      }
+      await this.delayLoadingFinish(this.shopService.shopLoading);
+      this.navigateToErrorComponent(error);
     }
   }
 
   async search(query: string) {
-    console.log('search', query);
+    //console.log('search', query);
     this.searchService.searchError.set(null);
-    console.log(query.trim() !== '');
+    //console.log(query.trim() !== '');
     if (query.trim() !== '') {
       try {
         const searchResponse = await this.SEARCH(query);
         this.searchService.searchProducts.set(searchResponse.results.products);
         this.searchService.showSearchedResults.set(true);
       } catch (error) {
-        console.log(error);
+        //console.log(error);
         this.searchService.searchError.set((error as Error).message);
       }
     }
@@ -149,14 +141,8 @@ export class ApiService {
       const categoriesResponse = await this.GET_CATEGORIES();
       this.filtersService.categories.set(categoriesResponse.categories);
     } catch (error) {
-      if (isAxiosError(error)) {
-        this.router.navigateByUrl(
-          `/error?status="${error.status}"&message="${error.message}"`
-        );
-      } else {
-        this.router.navigateByUrl(
-          `/error?message="${(error as Error).message}"`
-        );
+      if (!this.shopService.shopLoading()) {
+        this.navigateToErrorComponent(error);
       }
     }
   };
@@ -166,15 +152,19 @@ export class ApiService {
       const vendorsResponse = await this.GET_VENDORS();
       this.filtersService.vendors.set(vendorsResponse.vendors);
     } catch (error) {
-      if (isAxiosError(error)) {
-        this.router.navigateByUrl(
-          `/error?status="${error.status}"&message="${error.message}"`
-        );
-      } else {
-        this.router.navigateByUrl(
-          `/error?message="${(error as Error).message}"`
-        );
+      if (!this.shopService.shopLoading()) {
+        this.navigateToErrorComponent(error);
       }
     }
   };
+
+  navigateToErrorComponent(error: unknown) {
+    if (isAxiosError(error)) {
+      this.router.navigateByUrl(
+        `/error?status="${error.status}"&message="${error.message}"`
+      );
+    } else {
+      this.router.navigateByUrl(`/error?message="${(error as Error).message}"`);
+    }
+  }
 }

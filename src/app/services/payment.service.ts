@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import {
   Appearance,
   loadStripe,
+  PaymentIntent,
+  PaymentIntentResult,
   Stripe,
   StripeCheckout,
 } from '@stripe/stripe-js';
@@ -19,15 +21,16 @@ export class PaymentService {
   apiService = inject(ApiService);
   router = new Router();
 
-  paymentElementLoading = signal<boolean>(false);
-  addressElementLoading = signal<boolean>(false);
+  paymentLoading = signal<boolean>(true);
+  addressLoading = signal<boolean>(true);
   processingPayment = signal<boolean>(false);
   payingProducts = signal<CartProduct[]>([]);
   total = signal<number>(0);
 
   emailError = signal<string>('');
-  checkout: StripeCheckout | null = null;
+  checkout = signal<StripeCheckout | null>(null);
   stripe: Stripe | null = null;
+  orderPaymentIntent = signal<PaymentIntentResult | undefined>(undefined);
 
   stripePublic: string = isDevMode()
     ? environment.stripePublic
@@ -51,12 +54,24 @@ export class PaymentService {
       )
       .then((res) => {
         return res.data.clientSecret;
+      })
+      .catch((err) => {
+        const message = 'An error occured while creating the checkout session';
+        if (isAxiosError(err)) {
+          this.router.navigateByUrl(
+            `/error?status="${err.status}"&message="${message}"`
+          );
+        } else {
+          this.router.navigateByUrl(`/error?message="${message}"`);
+        }
+        return message;
       });
   };
 
   async loadStripeElements() {
     try {
       this.stripe = await loadStripe(this.stripePublic);
+
       const appearance: Appearance = {
         theme: 'stripe',
       };
@@ -65,22 +80,22 @@ export class PaymentService {
         elementsOptions: { appearance },
       });
       if (checkout) {
-        this.checkout = checkout;
-        const paymentElement = this.checkout.createPaymentElement();
+        this.checkout.set(checkout);
 
+        const paymentElement = checkout.createPaymentElement();
         paymentElement.mount('#payment-element');
-        const addressElement = this.checkout.createShippingAddressElement();
+
+        const addressElement = checkout.createShippingAddressElement();
         addressElement.mount('#address-element');
+
         paymentElement.on('ready', () => {
-          this.apiService.delayLoadingFinish(this.paymentElementLoading);
+          this.apiService.delayLoadingFinish(this.paymentLoading);
         });
         addressElement.on('ready', () => {
-          this.apiService.delayLoadingFinish(this.addressElementLoading);
+          this.apiService.delayLoadingFinish(this.addressLoading);
         });
-        this.total.set(parseFloat(this.checkout.session().total.total.amount));
+        this.total.set(parseFloat(checkout.session().total.total.amount));
       }
-
-      //continute  with the stripe documentation
     } catch (error) {
       //redirect to an error component
       if (isAxiosError(error)) {
@@ -97,10 +112,10 @@ export class PaymentService {
 
   async payOrder(email: string) {
     this.processingPayment.set(true);
-    const updateResult = await this.checkout?.updateEmail(email);
+    const updateResult = await this.checkout()?.updateEmail(email);
     const isValid = updateResult?.type !== 'error';
     if (isValid) {
-      const checkoutResult = await this.checkout?.confirm();
+      const checkoutResult = await this.checkout()?.confirm();
       this.apiService.delayLoadingFinish(this.processingPayment);
 
       if (checkoutResult?.type === 'error') {
@@ -112,6 +127,7 @@ export class PaymentService {
         }
       }
     } else {
+      console.log(updateResult.error.message);
       this.emailError.set(updateResult.error.message);
       this.apiService.delayLoadingFinish(this.processingPayment);
     }

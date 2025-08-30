@@ -1,5 +1,5 @@
 <section class="checkout min-h-screen grid grid-cols-2">
-  @if(paymentLoading || addressLoading){
+  @if(paymentLoading() || addressLoading()){
   <div class="loader fixed left-0 top-0 bottom-0 w-full z-40 bg-ms-white">
     <lottie-player
       class="max-w-[300px] mx-auto"
@@ -54,9 +54,7 @@
           <label for="email" class="stripe-email-label">Email</label>
           <input
             class="border focus:border-[#0570de]"
-            [class]="
-              emailError() !== null ? ' border-red-500' : 'border-[#e6e6e6]'
-            "
+            [class]="emailError() ? ' border-red-500' : 'border-[#e6e6e6]'"
             [(ngModel)]="email"
             (input)="resetEmailError()"
             type="text"
@@ -118,15 +116,15 @@
       <div
         (click)="paymentService.payOrder(email)"
         class="pay-btn cursor-pointer relative w-fit mt-6"
-        [class]="submitting ? 'disable' : ''"
+        [class]="processingPayment() ? 'disable' : ''"
       >
         <span
           class="text tracking-widest inline-block px-3 py-2 w-fit font-bold relative"
         >
-          <span [class]="submitting ? 'opacity-0' : 'opacity-100'"
+          <span [class]="processingPayment() ? 'opacity-0' : 'opacity-100'"
             >Pay Order
           </span>
-          @if(submitting){
+          @if(processingPayment()){
           <div
             class="ms-loader absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%]"
           ></div>
